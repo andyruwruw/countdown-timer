@@ -26,4 +26,4 @@ app.use("/api/users", users.routes);
 const photos = require("./counters.js");
 app.use("/api/counters", counters.routes);
 
-app.listen(3001, () => console.log('Server listening on port 3001!'));
+app.listen(3002, () => console.log('Server listening on port 3002!'));

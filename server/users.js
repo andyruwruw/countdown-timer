@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   name: String,
+  current: Number,
   tokens: [],
 });
 
@@ -102,6 +103,7 @@ router.post('/', async (req, res) => {
     const user = new User({
       username: req.body.username,
       password: req.body.password,
+      current: 0,
       name: req.body.name
     });
     await user.save();
@@ -111,6 +113,19 @@ router.post('/', async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
+router.put('/current', async (req, res) => {
+  try {
+    let user = await User.findOne({
+      username: req.user.username,
+    });
+    user.current = req.body.current;
+    user.save();
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+})
 
 // login
 router.post('/login', async (req, res) => {
