@@ -86,6 +86,14 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error);
       }
+    },
+    async sampleCounter(context) {
+      
+      let hardcode = [
+        {stops: [{title: "Block 1", time: new Date("9/26/19")}]}
+      ]
+      context.commit('setCounters', hardcode);
+      context.commit('setCurrent', 0);
     }
   }
 })

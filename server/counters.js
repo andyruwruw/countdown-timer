@@ -103,6 +103,34 @@ router.delete('/:title', async (req, res) => { // Delete after game found
     }
 });
 
+router.get('/:title/nextstop', async (req, res) => { // Delete after game found
+	try {
+        let counter = await Counter.findOne({
+            user: req.user,
+            title: req.params.title
+        });
+
+        let currTime = new Date();
+        let weekDay = currTime.getDay();
+
+        let closestItem = null;
+        
+        for (let i = 0; i <  counter.stops.length; i++) {
+            if (counter.stops[i].days.includes(weekDay)) {
+
+            }
+        }
+
+
+        return res.send(stop);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+// stops: {title: "asdf", days: Array, start: {time: hour, min: num}, end: {time: hour, min: num}
+
 module.exports = {
     model: Counter,
     routes: router,

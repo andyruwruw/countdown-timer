@@ -1,0 +1,125 @@
+body {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin: 0;
+}
+
+:root {
+    --firstValue: 0;
+    --secondValue: 0;
+}
+
+#timer-div {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(247, 87, 87);
+}
+
+#settings-div {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+}
+
+#center-text {
+    z-index: 0;
+    width: 100vw;
+    margin: 0 auto;
+    padding-top: 12%;
+}
+
+#time {
+    display: flex;
+    width: 95vw;
+    max-width: 1000px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.item {
+    display: block;
+    width: 230px;
+    margin: 0 15px;
+}
+
+h1 {
+    font-size: 10em;
+    font-weight: lighter;
+    margin: 0 auto;
+    background: -webkit-linear-gradient(rgba(255, 201, 201, 0.728), #eee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    font-size: 5em;
+    margin: 0 auto;
+    margin-top: 20px;
+    color: white;
+}
+
+h3 {
+    font-size: 1em;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.575);
+}
+
+.circle {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    width: 80vh; 
+    height: 80vh; 
+    margin: 0 auto;
+    top: 5vh;
+    left: calc((100vw - 80vh) / 2);
+    background-color: rgba(238, 238, 238, 0.05);
+
+    border-radius: 100%;
+}
+
+.circle-segment { 
+    overflow: hidden;
+    height: 100%;
+    position: absolute;
+
+    transform: translate(0, 0) rotate(0deg) rotate(calc(var(--offset, 0) * 1deg));
+    width: 50%;
+    transform-origin: 100% 100%;
+}
+
+.first {
+    margin-left: 50%;
+}
+
+.last {
+    margin-left: 0%;
+    transform-origin: 50% 50%;
+    transform: rotate(180deg) translateX(-1px);
+}
+
+.first.circle-segment:before {
+    background-color: rgba(255, 255, 255, 0.137);
+    content: '';
+    height: 200%;
+    position: absolute;
+    transform: translate(-125%, -25%) rotate(calc(var(--firstValue, 0) * 1deg));
+    transform-origin: 100% 50%;
+    width: 200%;
+}
+
+.last.circle-segment:before {
+    background-color: rgba(255, 255, 255, 0.137);
+    content: '';
+    height: 200%;
+    position: absolute;
+    transform: translate(-125%, -25%) rotate(calc(var(--secondValue, 0) * 1deg));
+    transform-origin: 100% 50%;
+    width: 200%;
+}
