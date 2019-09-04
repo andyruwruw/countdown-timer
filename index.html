@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Am I Done Yet?</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./style.css"/>
+  </head>
+  <body onload="loadedPage()">
+    <div id="app">
+        <div id="timer-div">
+            <div :style="'--windowSize :' + windowMin" class="circle">
+                <div class="circle-segment first" :style="'--firstvalue :' + firstCircle"></div>
+                <div class="circle-segment last" :style="'--secondvalue :' + secondCircle"></div>
+            </div>
+            <div id="center-text">
+                <div id="time">
+                    <div v-for="item in remaining" v-bind:key="item.type" class="item">
+                        <h1>{{item.num}}</h1>
+                        <h3>{{item.type}}</h3>
+                    </div>
+                </div>
+                <h2 v-if="gapPrior" class="item-title">Until {{stops[currStop].title}}</h2>
+                <h2 v-else class="item-title">{{stops[currStop].title}}</h2>
+            </div>
+        </div>
+        <div id="settings-div">
+
+        </div>
+        <div id="sign-in">
+            <button @click="signIn()">Authorize</button>
+            <button @click="signOut()">Sign-Out</button>
+            <button @click="print()">PRINT</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
+    <script async defer src="https://apis.google.com/js/api.js"></script>
+    <script type="text/javascript" src="./script.js"></script>
+
+  </body>
+</html>
