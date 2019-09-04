@@ -5,6 +5,7 @@ body {
     text-align: center;
     color: #2c3e50;
     margin: 0;
+    overflow-x: hidden;
 }
 
 :root {
@@ -13,25 +14,27 @@ body {
     --windowSize: 0;
 }
 
-#timer-div {
+#timer-section {
+    position: relative;
     display: block;
     height: 100vh;
     width: 100vw;
     background-color: rgb(247, 87, 87);
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.178);
 }
 
 #settings-div {
+    position: relative;
     display: block;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(255, 255, 255);
 }
 
 #center-text {
     z-index: 0;
     width: 100vw;
     margin: auto auto;
-    padding-top: 12%;
+    padding-top: calc((100vh - calc(var(--windowSize) * .4 * 1px)) / 2);
 }
 
 #time {
@@ -41,23 +44,23 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    flex-wrap: wrap;
 }
 
 .item {
     display: block;
-    width: 230px;
+    min-width: 50px;
     margin: 0 15px;
 }
 
 h1 {
-    font-size: 10em;
+    font-size: 3em;
     font-weight: lighter;
     margin: 0 auto;
     color: white;
 }
 
 h2 {
-    font-size: 4em;
     margin: 0 auto;
     margin-top: 20px;
     color: white;
@@ -66,11 +69,47 @@ h2 {
 }
 
 h3 {
-    font-size: 1em;
     margin: 0 auto;
     color: rgba(255, 255, 255, 0.575);
-    transform: translateY(-20px);
+    
 }
+
+@media screen and (min-width: 530px) {
+    .item {
+        min-width: 100px;
+    }
+    h1 {
+        font-size: 5em;
+    }
+    
+    h2 {
+        font-size: 3em;
+    }
+    
+    h3 {
+        font-size: .8em;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .item {
+        min-width: 200px;
+    }
+    h1 {
+        font-size: 10em;
+    }
+    
+    h2 {
+        font-size: 4em;
+    }
+    
+    h3 {
+        font-size: 1em;
+        transform: translateY(-20px);
+    }
+}
+
+
 
 .circle {
     display: block;
@@ -79,7 +118,7 @@ h3 {
     width: calc(var(--windowSize) * .8 * 1px); 
     height: calc(var(--windowSize) * .8 * 1px); 
     margin: 0 auto;
-    top: 5vh;
+    top: calc((100vh - calc(var(--windowSize) * .8 * 1px)) / 2);
     left: calc((100vw - calc(var(--windowSize) * .8 * 1px)) / 2);
     background-color: rgba(238, 238, 238, 0.05);
 
@@ -127,4 +166,41 @@ h3 {
 
 .item-title {
     text-overflow: clip;
+}
+
+.scroll-button {
+    position: absolute;
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url("./assets/down-arrow.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-color: rgba(247, 87, 87, 0);
+    border: 0px;
+    left: calc((100vw - 40px) / 2);
+    
+    opacity: .2;
+    transition: all .3s ease;
+    transform: scale(.5, .5);
+}
+
+.scroll-button.scroll-down:hover {
+    opacity: 1;
+    transform: scale(1, 1);
+}
+
+.scroll-button.scroll-up:hover {
+    opacity: 1;
+    transform: scale(1, 1) rotate(180deg);
+}
+
+.scroll-down {
+    bottom: 20px;
+    filter: invert(100%);
+}
+
+.scroll-up {
+    top: 20px;
+    transform: rotate(180deg) scale(.5, .5);
 }

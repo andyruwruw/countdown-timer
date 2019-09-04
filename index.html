@@ -6,13 +6,13 @@
     <link rel="stylesheet" href="./style.css"/>
   </head>
   <body onload="loadedPage()">
-    <div id="app">
-        <div id="timer-div">
-            <div :style="'--windowSize :' + windowMin" class="circle">
+    <div :style="'--windowSize :' + windowMin" id="app">
+        <div id="timer-section">
+            <div  class="circle">
                 <div class="circle-segment first" :style="'--firstvalue :' + firstCircle"></div>
                 <div class="circle-segment last" :style="'--secondvalue :' + secondCircle"></div>
             </div>
-            <div id="center-text">
+            <div v-if="stops.length > 0" id="center-text">
                 <div id="time">
                     <div v-for="item in remaining" v-bind:key="item.type" class="item">
                         <h1>{{item.num}}</h1>
@@ -22,8 +22,11 @@
                 <h2 v-if="gapPrior" class="item-title">Until {{stops[currStop].title}}</h2>
                 <h2 v-else class="item-title">{{stops[currStop].title}}</h2>
             </div>
+            <button @click="scroll(true)"class="scroll-button scroll-down"></button>
         </div>
+        
         <div id="settings-div">
+            <button @click="scroll(false)"class="scroll-button scroll-up"></button>
 
         </div>
         <div id="sign-in">

@@ -30,6 +30,8 @@ let app = new Vue({
         windowMin: 0,
         
         countup: 0,
+
+        setup: false,
     },
     methods: {
         signIn() {
@@ -51,41 +53,94 @@ let app = new Vue({
               }, function(error) {
                 this.error = JSON.stringify(error, null, 2);
             });
-            this.listUpcomingEvents();
+            this.setup = true;
+            await this.listUpcomingEvents();
         }, 
-        async listUpcomingEvents() {
-            let response = await gapi.client.calendar.events.list({
-                'calendarId': 'primary',
-                'timeMin': (new Date()).toISOString(),
-                'showDeleted': false,
-                'singleEvents': true,
-                'maxResults': 10,
-                'orderBy': 'startTime'
-            });
-            if (response.result.items.length > 0)
-            {
-                this.stops = [];
-            }
+        async lastEvent() {
+            let day = 1000 * 60 * 60 * 24;
+            let offset = 0;
+            let end = this.currTime;
+            let today = new Date(this.currTime.getTime() - (this.currTime.getTime() % day));
 
-            for (var i = 0; i < response.result.items.length; i++)
+            while (offset < 2)
             {
-                if (response.result.items[i].start.dateTime == null) {
-                    continue;
+                let dayStart = new Date(today.getTime() - day * offset);
+                console.log(dayStart);
+                console.log(end);
+                let response = await gapi.client.calendar.events.list({
+                    'calendarId': 'primary',
+                    'timeMin': (dayStart).toISOString(),
+                    'timeMax': (end).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'maxResults': 100,
+                    'orderBy': 'startTime'
+                });
+                console.log(response.result.items);
+                
+                let lastOne = 0;
+                for (var i = 0; i < response.result.items.length; i++)
+                {
+                    if (new Date(response.result.items[i].start.dateTime).getTime() > this.currTime.getTime())
+                    {
+                        if (i == response.result.items.length - 1) {
+                            return response.result.items[i];
+                        }
+                        if (i == 0)
+                        {
+                            break;
+                        }
+                        while (response.result.items[lastOne].start.dateTime == null) {
+                            lastOne -= 1;
+                        }
+                        return response.result.items[lastOne];
+                    }
+                    else {
+                        lastOne = i;
+                    }
                 }
-                let newStop = {title: response.result.items[i].summary, start: new Date(response.result.items[i].start.dateTime), end: new Date(response.result.items[i].end.dateTime)};
-                this.stops.push(newStop);
+                offset += 1;
+                end = dayStart;
+            }
+        },
+        async listUpcomingEvents() {
+            if (this.setup) {
+                let response = await gapi.client.calendar.events.list({
+                    'calendarId': 'primary',
+                    'timeMin': (new Date()).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'maxResults': 10,
+                    'orderBy': 'startTime'
+                });
+                if (response.result.items.length > 0)
+                {
+                    this.stops = [];
+                }
+    
+                for (var i = 0; i < response.result.items.length; i++)
+                {
+                    if (response.result.items[i].start.dateTime == null) {
+                        continue;
+                    }
+                    let newStop = {title: response.result.items[i].summary, start: new Date(response.result.items[i].start.dateTime), end: new Date(response.result.items[i].end.dateTime)};
+                    this.stops.push(newStop);
+                }
             }
             // this.stops = response.result.items;
         },
         async count() {
-            if (this.countup > 10){
+            console.log(this.countup);
+            if (this.countup > 50){
+                this.countup = 0;
+                console.log("Finding Events");
                 await this.listUpcomingEvents();
-                await this.updateStop();
-                this.currTime = new Date();
             }
             else {
                 this.countup += 1;
             }
+            this.currTime = new Date();
+            await this.updateStop();
             await this.windowSize();
             this.switch = true;
         },
@@ -172,6 +227,7 @@ let app = new Vue({
                     string += remainder[i].num + " " + remainder[i].type + " ";
                 }
             }
+            console.log("TITLE");
             document.title = string;
         },
         windowSize() {
@@ -179,6 +235,22 @@ let app = new Vue({
             if (window.innerWidth < this.windowMin)
             {
                 this.windowMin = window.innerWidth;
+            }
+        },
+        scroll(down) {
+            if (down) {
+                window.scroll({
+                    top: window.innerHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            }
+            else {
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
             }
         }
     },
@@ -250,8 +322,9 @@ let app = new Vue({
         },
     },
     created() {
+        this.initClient();
         setInterval(this.count, 100);
-
+        
     }
 });
 
