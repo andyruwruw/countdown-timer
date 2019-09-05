@@ -6,9 +6,9 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./style.css"/>
     <script src="vue.min.js"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="loadedPage()"></script>
   </head>
-  <body onload="loadedPage()">
+  <body>
     <div v-bind:class="{locked: user == null}" :style="'--windowSize :' + windowMin" id="app">
         <div v-if="user == null" id="login-page">
             <h1 id="calendar-title">Calendar Counter</h1>
