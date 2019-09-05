@@ -100,7 +100,7 @@ function RGBtoHSV(r, g, b) {
     };
 }
 
-var CLIENT_ID = '240364897736-l92t1hd17n06hen63b130f9pju5fvk0e.apps.googleusercontent.com';
+var CLIENT_ID = '956722193096-7724hctisdq18jr9s6p5jgmee4cpfoul.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyAtM_vRxZXAA4U1hfkSUxWGBwiXFhb5tUU';
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
