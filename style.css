@@ -14,7 +14,7 @@ body {
     --firstValue: 0;
     --secondValue: 0;
     --windowSize: 0;
-    --backgroundColorValue: rgb(247, 87, 87);
+    --backgroundColorValue: rgb(87, 162, 247);
 }
 
 .locked {
@@ -41,7 +41,7 @@ body {
     display: block;
     height: 100vh;
     width: 100vw;
-    background-color: var(--backgroundColorValue, rgb(247, 87, 87));
+    background-color: var(--backgroundColorValue, rgb(87, 162, 247));
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.205);
 }
 
