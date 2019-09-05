@@ -185,6 +185,7 @@ let app = new Vue({
         },
         async initClient() {
             try {
+                console.log("Initializing Google API");
                 await gapi.client.init({
                     apiKey: API_KEY,
                     clientId: CLIENT_ID,
