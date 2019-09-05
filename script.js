@@ -138,20 +138,36 @@ let app = new Vue({
 
         setup: false,
 
+        saved: false,
+
         colorTimer: true,
         colorIndex: 0,
         color: "rgb(247, 87, 87)",
 
         colors: [
-            {color: "#475C7A", index: 0},
+            {color: "rgb(71,92,122)", index: 0},
             {color: "rgb(247, 177, 91)", index: 1},
             {color: "rgb(247, 87, 87)", index: 2},
             {color: "rgb(40,40,40)", index: 3},
-            {color: "#A6206A", index: 4},
-            {color: "#568EA6", index: 5},
+            {color: "rgb(166,32,106)", index: 4},
+            {color: "rgb(86,142,166)", index: 5},
+            {color: "rgb(216,115,127)", index: 6},
+
+            {color: "rgb(243,111,56)", index: 7},
+            {color: "RGB(60, 179, 113)", index: 8},
+            {color: "RGB(30, 144, 255)", index: 9},
+            {color: "RGB(75, 0, 130)", index: 10},
+            {color: "RGB(128, 0, 0)", index: 11},
+            {color: "RGB(25, 25, 112)", index: 12},
+            {color: "RGB(112, 128, 144)", index: 13},
         ],
     },
     methods: {
+        saveColor() {
+            this.saved = true;
+            document.cookie = "color = " + this.colorIndex + "; path=/";
+            console.log("Preferences Saved");
+        },
         signIn() {
             gapi.auth2.getAuthInstance().signIn();
             this.initClient();
@@ -160,30 +176,30 @@ let app = new Vue({
             gapi.auth2.getAuthInstance().signOut();
         },
         chooseColor(chosen) {
-            if (chosen < 0 || chosen > this.colors.length - 1)
+            this.saved = false;
+            this.colorIndex = chosen;
+            if (chosen >= 0 && chosen <= this.colors.length - 1)
             {
-                this.colorTimer = true;
-                this.colorIndex = 0;
-            }
-            else {
-                this.colorIndex = chosen;
                 this.color = this.colors[this.colorIndex].color;
-                this.colorTimer = false;
             }
-            console.log(this.color);
         },
         async initClient() {
-            await gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-              }).then(function () {
-                // Listen for sign-in state changes.
-                gapi.auth2.getAuthInstance().isSignedIn.listen();
-              }, function(error) {
-                this.error = JSON.stringify(error, null, 2);
-            });
+            try {
+                await gapi.client.init({
+                    apiKey: API_KEY,
+                    clientId: CLIENT_ID,
+                    discoveryDocs: DISCOVERY_DOCS,
+                    scope: SCOPES
+                }).then(function () {
+                    // Listen for sign-in state changes.
+                    gapi.auth2.getAuthInstance().isSignedIn.listen();
+                }, function(error) {
+                    this.error = JSON.stringify(error, null, 2);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            this.user = "Loading";
             this.setup = true;
             await this.listUpcomingEvents();
             setInterval(this.count, 100);
@@ -255,10 +271,6 @@ let app = new Vue({
             await this.windowSize();
             this.switch = true;
         },
-        printThisPls(thing) {
-            let thing23 = new Date(thing);
-            console.log(thing23);
-        },
         updateCircle() {
             let lastStop = this.start;
             let nextStop = this.end;
@@ -277,29 +289,19 @@ let app = new Vue({
 
             this.firstCircle = firstValue;
             this.secondCircle = secondValue;
-
-            if (this.colorTimer && percent >= 0 && percent <= 1)
+            if (this.colorIndex == -1)
             {
-                let inversePercent = 1 - percent;
-                let hue = 115 * inversePercent;
-                let newColor = HSVtoRGB(hue, 100, 73);
-                this.color = "rgb(" + newColor[0] + "," + newColor[1] + "," + newColor[2] + ")";
-                
-                //this.newColor(percent);
+                if (percent >= 0 && percent <= 1)
+                {
+                    let inversePercent = 1 - percent;
+                    let hue = 115 * inversePercent;
+                    let newColor = HSVtoRGB(hue, 100, 73);
+                    this.color = "rgb(" + newColor[0] + "," + newColor[1] + "," + newColor[2] + ")";
+                }
             }
             else {
                 this.color = this.colors[this.colorIndex].color;
             }
-        },
-        newColor(w1) {
-            var color2 = [78, 255, 137];
-            var color1 = [255, 78, 78];
-            var w2 = 1 - w1;
-            var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
-                Math.round(color1[1] * w1 + color2[1] * w2),
-                Math.round(color1[2] * w1 + color2[2] * w2)];
-            this.color = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
-            console.log(this.color);
         },
         async updateStop() {
             if (this.stops.length == 0) {
@@ -475,11 +477,33 @@ let app = new Vue({
             this.toString(remainder);
             return remainder;
         },
+        colorLight() {
+            return this.color.substring(0,3) + "a" + this.color.substring(3, this.color.length - 4) + ", .2)"; 
+        },
+        savedText() {
+            if (this.saved) {
+                return "Saved";
+            }
+            else {
+                return "Save Preference";
+            }
+        },
     },
     created() {
         this.initClient();
-        
-        
+        var cookie = document.cookie;
+        if (cookie.substring(16, 16 + 5) == "color")
+        {
+            this.saved = true;
+            this.colorIndex = parseInt(cookie.substring(22), 10);
+            if (this.colorIndex == -1) {
+                this.colorTimer = true;
+            }
+            else {
+                this.colorTimer = false;
+            }
+            console.log("Preferences Loaded");
+        }
     }
 });
 

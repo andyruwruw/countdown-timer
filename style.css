@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Francois+One&display=swap');
+
 body {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -15,6 +17,25 @@ body {
     --backgroundColorValue: rgb(247, 87, 87);
 }
 
+.locked {
+    overflow: hidden;
+}
+
+#login-page {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: RGB(112, 128, 144);
+    
+}
+
+#loading {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(30, 144, 255);
+}
+
 #main-page {
     position: relative;
     display: block;
@@ -29,6 +50,9 @@ body {
     display: block;
     min-height: 100vh;
     width: 100vw;
+    background-color: rgba(207, 207, 207, 0.185);
+    background-repeat: no-repeat, repeat;
+    background-size: 100% 100%, 25% auto;
 }
 
 #center-text {
@@ -215,13 +239,15 @@ h3 {
     height: 5vw;
     border: 1px solid rgba(238, 238, 238, 0.05);
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.185);
-    transform: all .3s ease;
+    transition: all .2s ease;
     margin:20px;
+    border-radius: 5px;
     background-color: var(--buttoncolor);
 }
 
 .color-button:hover {
     transform: scale(1.1, 1.1);
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.185);
 }
 
 #color-buttons {
@@ -239,7 +265,7 @@ h3 {
     width: 40vw;
     max-width: 300px;
     background-color: rgba(0, 0, 0, 0.205);
-    border: 1px solid rgba(255, 255, 255, 0.137);
+    border: 1px solid rgba(0, 0, 0, 0.384);
     border-radius: 5px;
     font-size: 1em;
     height: 50px;
@@ -251,14 +277,49 @@ h3 {
     width: 40vw;
     max-width: 400px;
     min-width: 200px;
-    background-color: rgba(235, 235, 235, 0.982);
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.185);
-    border: 1px solid rgba(255, 255, 255, 0.137);
+    background-color: rgba(235, 235, 235, 0.473);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+    border: 0px solid rgba(3, 3, 3, 0.137);
     border-radius: 5px;
     height: 70px;
     font-size: 1.6em;
     color: black;
     transition: all .2s ease;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.preferences-button {
+    display: block;
+    width: 40vw;
+    border-radius: 5px;
+    height: 70px;
+    color: black;
+    transition: all .2s ease;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    font-size: 1.6em;
+    margin: 0 auto;
+    max-width: 300px;
+    max-height: 150px;
+    border: 0px;
+    margin-top: 35px;
+    background-color: rgba(164, 201, 235, 0.637);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+}
+
+.savedPref {
+    background-color: rgba(224, 224, 224, 0.623) !important;
+    color: rgb(197, 197, 197);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+}
+
+.preferences-button:hover {
+    background-color: rgb(89, 139, 248);
+    color: white;
 }
 .user-button:hover {
     transform: scale(1.1, 1.1);
@@ -295,5 +356,102 @@ h3 {
     }
     100% {
         background-color: rgb(216, 76, 76);
+    }
+}
+
+
+
+#calendar-title {
+    font-size: 7em;
+    padding-top: 23vh;
+    margin-bottom: 30px;
+    text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.219);
+    transition: all .5s ease;
+}
+
+#calendar-title:hover {
+    transform: scale(1.2, 1.2) rotate(2deg) translateY(-20px);
+    text-shadow: 10px 4px 5px rgba(0, 0, 0, 0.199);
+}
+
+
+#instructions {
+    display: none;
+    margin: 0 auto;
+    font-size:3em;
+    color: rgba(255, 255, 255, 0.541);
+}
+
+.authenticate {
+    background-image: url("./assets/google.png");
+    background-size: 100% 100%;
+    background-position: center;
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border: 0px;
+    background-color: rgba(255, 255, 255, 0.74);
+    border-radius: 20px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.11);
+    transition: all .2s ease;
+}
+
+.authenticate:hover {
+    transform: scale(1.1, 1.1);
+    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.11);
+    background-color: white;
+}
+
+#buttons-bottom {
+    width: 100vw;
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+}
+
+a {
+    width: 40px;
+    height: 40px;
+    display: block;
+    background-size: 100% 100%;
+    opacity: .3;
+    filter: grayscale(80%);
+    margin: 0 8px;
+    transition: all .5s ease;
+}
+
+a:hover {
+    animation: spin .5s ease;
+    filter: grayscale(0%);
+    transform: scale(1.2, 1.2);
+    opacity: 1;
+
+}
+
+.github {
+    background-image: url("./assets/github.png");
+    
+}
+
+.home {
+    background-image: url("./assets/home.png");
+}
+
+@keyframes spin {
+    0% {
+        opacity: .3;
+        filter: grayscale(80%);
+        transform: scale(1, 1) rotate(0deg);
+        
+    }
+    100% {
+        opacity: 1;
+        filter: grayscale(0%);
+        transform: scale(1.2, 1.2) rotate(360deg);
+        opacity: 1;
     }
 }

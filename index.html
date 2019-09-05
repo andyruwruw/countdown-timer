@@ -2,14 +2,20 @@
 <html>
   <head>
     <title>Am I Done Yet?</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./assets/icon.ico" />
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/api.js"></script>
   </head>
   <body onload="loadedPage()">
-    <div :style="'--windowSize :' + windowMin" id="app">
-        <div :style="'--backgroundColorValue :' + color" id="main-page">
+    <div v-bind:class="{locked: user == null}" :style="'--windowSize :' + windowMin" id="app">
+        <div v-if="user == null" id="login-page">
+            <h1 id="calendar-title">Calendar Counter</h1>
+            <h2 id="instructions">Login to Begin</h2>
+            <button class="authenticate" @click="signIn()"></button>
+        </div>
+        <div v-if="user != null" :style="'--backgroundColorValue :' + color" id="main-page">
             <div  class="circle">
                 <div class="circle-segment first" :style="'--firstvalue :' + firstCircle"></div>
                 <div class="circle-segment last" :style="'--secondvalue :' + secondCircle"></div>
@@ -27,10 +33,10 @@
             <button @click="scroll(true)"class="scroll-button scroll-down"></button>
         </div>
         
-        <div id="settings-div">
+        <div v-if="user != null" :style="'--backgroundColorValue :' + colorLight" id="settings-div">
             <button @click="scroll(false)"class="scroll-button scroll-up"></button>
             <div class="header-settings">
-                <button class="user-button" v-if="user == null" @click="signIn()">Login</button>
+                <button class="user-button" v-if="user == null" @click="signIn()">Authenticate</button>
                 <button class="user-button right" v-if="user != null">{{user}}</button>
                 <button class="user-button" v-if="user != null" @click="signOut()">Sign-Out</button>
             </div>
@@ -38,6 +44,11 @@
                 <button @click="chooseColor(-1)" class="color-button strobe"></button>
                 <button v-for="color in colors" @click="chooseColor(color.index)" :style="'background-color :' + color.color" class="color-button"></button>
                 
+            </div>
+            <button class="preferences-button" v-bind:class="{savedPref: saved}" @click="saveColor">{{savedText}}</button>
+            <div id="buttons-bottom">
+                <a href="https://github.com/andyruwruw/Countdown-Timer" class="github"></a>
+                <a href="http://andrewdanielyoung.com/" class="home"></a>
             </div>
             
         </div>
