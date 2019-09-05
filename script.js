@@ -3,6 +3,9 @@ var API_KEY = 'AIzaSyAtM_vRxZXAA4U1hfkSUxWGBwiXFhb5tUU';
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
+var colors = {
+    red: "rgb(247, 87, 87)",
+}
 
 function loadedPage() {
     gapi.load('client:auth2', app.initClient);
@@ -21,6 +24,8 @@ let app = new Vue({
         start: null,
         end: null,
 
+        lastend: null,
+
         switch: false,
         error: null,
 
@@ -32,6 +37,9 @@ let app = new Vue({
         countup: 0,
 
         setup: false,
+
+        colorTimer: true,
+        color: "rgb(247, 87, 87)"
     },
     methods: {
         signIn() {
@@ -55,53 +63,44 @@ let app = new Vue({
             });
             this.setup = true;
             await this.listUpcomingEvents();
-        }, 
-        async lastEvent() {
+            setInterval(this.count, 100);
+        },
+        async lastEventEnd() {
             let day = 1000 * 60 * 60 * 24;
-            let offset = 0;
-            let end = this.currTime;
-            let today = new Date(this.currTime.getTime() - (this.currTime.getTime() % day));
-
-            while (offset < 2)
+            let start = new Date(this.currTime.setHours(0,0,0,0));
+            let end = new Date(start.getTime() + day);
+            return (new Date((await this.findLastEvent(0, start, end)).end.dateTime)).getTime();
+        },
+        async findLastEvent(offset, start, end) {
+            let day = 1000 * 60 * 60 * 24;
+            let response = await gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (start).toISOString(),
+                'timeMax': (end).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 100,
+                'orderBy': 'startTime'
+            });
+            let potential = null;
+            for (var i = 0; i < response.result.items.length; i++)
             {
-                let dayStart = new Date(today.getTime() - day * offset);
-                console.log(dayStart);
-                console.log(end);
-                let response = await gapi.client.calendar.events.list({
-                    'calendarId': 'primary',
-                    'timeMin': (dayStart).toISOString(),
-                    'timeMax': (end).toISOString(),
-                    'showDeleted': false,
-                    'singleEvents': true,
-                    'maxResults': 100,
-                    'orderBy': 'startTime'
-                });
-                console.log(response.result.items);
-                
-                let lastOne = 0;
-                for (var i = 0; i < response.result.items.length; i++)
+                if (Object.keys(response.result.items[i].start)[0] == 'date')
                 {
-                    if (new Date(response.result.items[i].start.dateTime).getTime() > this.currTime.getTime())
-                    {
-                        if (i == response.result.items.length - 1) {
-                            return response.result.items[i];
-                        }
-                        if (i == 0)
-                        {
-                            break;
-                        }
-                        while (response.result.items[lastOne].start.dateTime == null) {
-                            lastOne -= 1;
-                        }
-                        return response.result.items[lastOne];
-                    }
-                    else {
-                        lastOne = i;
-                    }
+                    continue;
+                } 
+                else if ((new Date(response.result.items[i].start.dateTime)).getTime() > this.currTime.getTime() && potential != null)
+                {
+                    return response.result.items[potential];
+                }   
+                else if ((new Date(response.result.items[i].end.dateTime)).getTime() < this.currTime.getTime() && i == response.result.items.length - 1)
+                {
+                    return response.result.items[i];
                 }
-                offset += 1;
-                end = dayStart;
+                
+                potential = i;
             }
+            return this.findLastEvent(offset + 1, new Date(start.getTime() - day * (offset + 1)), start);
         },
         async listUpcomingEvents() {
             if (this.setup) {
@@ -113,10 +112,7 @@ let app = new Vue({
                     'maxResults': 10,
                     'orderBy': 'startTime'
                 });
-                if (response.result.items.length > 0)
-                {
-                    this.stops = [];
-                }
+                let newStops = [];
     
                 for (var i = 0; i < response.result.items.length; i++)
                 {
@@ -124,29 +120,27 @@ let app = new Vue({
                         continue;
                     }
                     let newStop = {title: response.result.items[i].summary, start: new Date(response.result.items[i].start.dateTime), end: new Date(response.result.items[i].end.dateTime)};
-                    this.stops.push(newStop);
+                    newStops.push(newStop);
                 }
+                this.stops = newStops;
+                this.lastEnd = await this.lastEventEnd();
             }
-            // this.stops = response.result.items;
         },
         async count() {
-            console.log(this.countup);
-            if (this.countup > 50){
-                this.countup = 0;
-                console.log("Finding Events");
-                await this.listUpcomingEvents();
-            }
-            else {
-                this.countup += 1;
-            }
             this.currTime = new Date();
-            await this.updateStop();
             await this.windowSize();
             this.switch = true;
+        },
+        printThisPls(thing) {
+            let thing23 = new Date(thing);
+            console.log(thing23);
         },
         updateCircle() {
             let lastStop = this.start;
             let nextStop = this.end;
+            //console.log("THIS");
+            //this.printThisPls(lastStop);
+           // this.printThisPls(nextStop);
             let gap = nextStop - lastStop;
             let progress = this.currTime.getTime() - lastStop;
             let percent = progress / gap;
@@ -157,34 +151,58 @@ let app = new Vue({
                 secondValue = percent * 360 - 180;
             }
 
-            let root = document.documentElement;
             this.firstCircle = firstValue;
             this.secondCircle = secondValue;
+
+            if (this.colorTimer && percent > 0 && percent <= 1)
+            {
+                this.newColor(percent);
+            }
         },
-        updateStop() {
+        newColor(w1) {
+            var color2 = [78, 255, 137];
+            var color1 = [255, 78, 78];
+            var w2 = 1 - w1;
+            var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+                Math.round(color1[1] * w1 + color2[1] * w2),
+                Math.round(color1[2] * w1 + color2[2] * w2)];
+            this.color = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+            console.log(this.color);
+        },
+        async updateStop() {
             if (this.stops.length == 0) {
                 return;
             }
-            while (this.stops[this.currStop].end.getTime() < this.currTime.getTime()) {
-                this.currStop += 1;
-            }
-            if (this.stops[this.currStop].start.getTime() > this.currTime.getTime()) {
-                this.gapPrior = true;
-                if (this.currStop - 1 > 0)
-                {
-                    this.start = this.stops[this.currStop - 1].end.getTime();
-                }
-                else {
-                    if (this.start == null) {
-                        this.start = new Date();
+            if (this.end < this.currTime.getTime() || this.start == null) {
+                while (this.stops[this.currStop].end.getTime() < this.currTime.getTime()) {
+                    this.currStop += 1;
+                    if (this.currStop > this.stops.length - 1)
+                    {
+                        await this.listUpcomingEvents();
+                        this.currStop = 0;
                     }
                 }
-                this.end = this.stops[this.currStop].start.getTime();
-            }
-            else {
-                this.gapPrior = false;
-                this.start = this.stops[this.currStop].start.getTime();
-                this.end = this.stops[this.currStop].end.getTime();
+
+                if (this.stops[this.currStop].start.getTime() > this.currTime.getTime()) {
+                    this.gapPrior = true;
+
+                    if (this.currStop == 0)
+                    {
+                        this.lastEnd = await this.lastEventEnd();
+                    }
+                    else 
+                    {
+                        this.lastEnd = this.stops[this.currStop -1].end.getTime();
+                    }
+
+                    this.start = this.lastEnd;
+                    this.end = this.stops[this.currStop].start.getTime();
+                }
+                else {
+                    this.gapPrior = false;
+                    this.start = this.stops[this.currStop].start.getTime();
+                    this.end = this.stops[this.currStop].end.getTime();
+                }
             }
         },
         toString(remainder) {
@@ -227,7 +245,6 @@ let app = new Vue({
                     string += remainder[i].num + " " + remainder[i].type + " ";
                 }
             }
-            console.log("TITLE");
             document.title = string;
         },
         windowSize() {
@@ -315,6 +332,12 @@ let app = new Vue({
                 }
                 remainder.push({num: seconds, type: "second" + s});
             }
+
+            if (remainder.length == 0) {
+                this.updateStop();
+                remainder = [{num: 0, type: "seconds"}];
+            }
+
             
             this.updateCircle();
             this.toString(remainder);
@@ -323,7 +346,7 @@ let app = new Vue({
     },
     created() {
         this.initClient();
-        setInterval(this.count, 100);
+        
         
     }
 });

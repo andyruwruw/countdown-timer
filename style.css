@@ -12,6 +12,7 @@ body {
     --firstValue: 0;
     --secondValue: 0;
     --windowSize: 0;
+    --backgroundColorValue: rgb(247, 87, 87);
 }
 
 #timer-section {
@@ -19,8 +20,8 @@ body {
     display: block;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(247, 87, 87);
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.178);
+    background-color: var(--backgroundColorValue, rgb(247, 87, 87));
+    box-shadow: 0px 5px 5px rgba(247, 95, 95, 0.932);
 }
 
 #settings-div {
@@ -62,7 +63,7 @@ h1 {
 
 h2 {
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 30px;
     color: white;
     display: block;
     max-width: 40vw;
@@ -203,4 +204,17 @@ h3 {
 .scroll-up {
     top: 20px;
     transform: rotate(180deg) scale(.5, .5);
+}
+
+.color-button {
+    display: block;
+    width: 5vw;
+    height: 5vw;
+    border: 1px solid rgba(238, 238, 238, 0.05);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.185);
+    transform: all .3s ease;
+}
+
+.color-button:hover {
+    transform: scale(1.1, 1.1);
 }
