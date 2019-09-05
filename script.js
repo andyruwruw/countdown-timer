@@ -1,11 +1,110 @@
+function HSVtoRGB(h, s, v) {
+    var r, g, b;
+    var i;
+    var f, p, q, t;
+        
+    // Make sure our arguments stay in-range
+    h = Math.max(0, Math.min(360, h));
+    s = Math.max(0, Math.min(100, s));
+    v = Math.max(0, Math.min(100, v));
+        
+    // We accept saturation and value arguments from 0 to 100 because that's
+    // how Photoshop represents those values. Internally, however, the
+    // saturation and value are calculated from a range of 0 to 1. We make
+    // That conversion here.
+    s /= 100;
+    v /= 100;
+        
+    if(s == 0) {
+        // Achromatic (grey)
+        r = g = b = v;
+        return [
+            Math.round(r * 255), 
+            Math.round(g * 255), 
+            Math.round(b * 255)
+        ];
+    }
+        
+    h /= 60; // sector 0 to 5
+    i = Math.floor(h);
+    f = h - i; // factorial part of h
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
+        
+    switch(i) {
+        case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+        
+        case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+        
+        case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+        
+        case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+        
+        case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+        
+        default: // case 5:
+            r = v;
+            g = p;
+            b = q;
+    }
+        
+    return [
+        Math.round(r * 255), 
+        Math.round(g * 255), 
+        Math.round(b * 255)
+    ];
+}
+
+function RGBtoHSV(r, g, b) {
+    if (arguments.length === 1) {
+        g = r.g, b = r.b, r = r.r;
+    }
+    var max = Math.max(r, g, b), min = Math.min(r, g, b),
+        d = max - min,
+        h,
+        s = (max === 0 ? 0 : d / max),
+        v = max / 255;
+
+    switch (max) {
+        case min: h = 0; break;
+        case r: h = (g - b) + d * (g < b ? 6: 0); h /= 6 * d; break;
+        case g: h = (b - r) + d * 2; h /= 6 * d; break;
+        case b: h = (r - g) + d * 4; h /= 6 * d; break;
+    }
+
+    return {
+        h: h,
+        s: s,
+        v: v
+    };
+}
+
 var CLIENT_ID = '240364897736-l92t1hd17n06hen63b130f9pju5fvk0e.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyAtM_vRxZXAA4U1hfkSUxWGBwiXFhb5tUU';
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
-var colors = {
-    red: "rgb(247, 87, 87)",
-}
 
 function loadedPage() {
     gapi.load('client:auth2', app.initClient);
@@ -14,6 +113,7 @@ function loadedPage() {
 let app = new Vue({
     el: "#app",
     data: {
+        user: null,
         stops: [],
 
         currStop: 0,
@@ -39,7 +139,17 @@ let app = new Vue({
         setup: false,
 
         colorTimer: true,
-        color: "rgb(247, 87, 87)"
+        colorIndex: 0,
+        color: "rgb(247, 87, 87)",
+
+        colors: [
+            {color: "#475C7A", index: 0},
+            {color: "rgb(247, 177, 91)", index: 1},
+            {color: "rgb(247, 87, 87)", index: 2},
+            {color: "rgb(40,40,40)", index: 3},
+            {color: "#A6206A", index: 4},
+            {color: "#568EA6", index: 5},
+        ],
     },
     methods: {
         signIn() {
@@ -48,6 +158,19 @@ let app = new Vue({
         },
         signOut() {
             gapi.auth2.getAuthInstance().signOut();
+        },
+        chooseColor(chosen) {
+            if (chosen < 0 || chosen > this.colors.length - 1)
+            {
+                this.colorTimer = true;
+                this.colorIndex = 0;
+            }
+            else {
+                this.colorIndex = chosen;
+                this.color = this.colors[this.colorIndex].color;
+                this.colorTimer = false;
+            }
+            console.log(this.color);
         },
         async initClient() {
             await gapi.client.init({
@@ -112,6 +235,7 @@ let app = new Vue({
                     'maxResults': 10,
                     'orderBy': 'startTime'
                 });
+                this.user = response.result.items[0].creator.email;
                 let newStops = [];
     
                 for (var i = 0; i < response.result.items.length; i++)
@@ -154,9 +278,17 @@ let app = new Vue({
             this.firstCircle = firstValue;
             this.secondCircle = secondValue;
 
-            if (this.colorTimer && percent > 0 && percent <= 1)
+            if (this.colorTimer && percent >= 0 && percent <= 1)
             {
-                this.newColor(percent);
+                let inversePercent = 1 - percent;
+                let hue = 115 * inversePercent;
+                let newColor = HSVtoRGB(hue, 100, 73);
+                this.color = "rgb(" + newColor[0] + "," + newColor[1] + "," + newColor[2] + ")";
+                
+                //this.newColor(percent);
+            }
+            else {
+                this.color = this.colors[this.colorIndex].color;
             }
         },
         newColor(w1) {

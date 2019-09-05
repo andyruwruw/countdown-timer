@@ -9,7 +9,7 @@
   </head>
   <body onload="loadedPage()">
     <div :style="'--windowSize :' + windowMin" id="app">
-        <div :style="'--backgroundColorValue :' + color"id="timer-section">
+        <div :style="'--backgroundColorValue :' + color" id="main-page">
             <div  class="circle">
                 <div class="circle-segment first" :style="'--firstvalue :' + firstCircle"></div>
                 <div class="circle-segment last" :style="'--secondvalue :' + secondCircle"></div>
@@ -29,21 +29,19 @@
         
         <div id="settings-div">
             <button @click="scroll(false)"class="scroll-button scroll-up"></button>
+            <div class="header-settings">
+                <button class="user-button" v-if="user == null" @click="signIn()">Login</button>
+                <button class="user-button right" v-if="user != null">{{user}}</button>
+                <button class="user-button" v-if="user != null" @click="signOut()">Sign-Out</button>
+            </div>
             <div id="color-buttons">
-                <button class="color-button"></button>
-                <button class="color-button"></button>
-                <button class="color-button"></button>
-                <button class="color-button"></button>
-                <button class="color-button"></button>
-                <button class="color-button"></button>
+                <button @click="chooseColor(-1)" class="color-button strobe"></button>
+                <button v-for="color in colors" @click="chooseColor(color.index)" :style="'background-color :' + color.color" class="color-button"></button>
+                
             </div>
             
         </div>
-        <div id="sign-in">
-            <button @click="signIn()">Authorize</button>
-            <button @click="signOut()">Sign-Out</button>
-            <button @click="print()">PRINT</button>
-        </div>
+
     </div>
 
     
