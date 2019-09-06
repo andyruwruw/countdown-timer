@@ -197,10 +197,10 @@ let app = new Vue({
                 }, function(error) {
                     this.error = JSON.stringify(error, null, 2);
                 });
+                this.user = "Loading";
             } catch (error) {
                 console.log(error);
             }
-            this.user = "Loading";
             this.setup = true;
             await this.listUpcomingEvents();
             setInterval(this.count, 100);
@@ -243,29 +243,34 @@ let app = new Vue({
             return this.findLastEvent(offset + 1, new Date(start.getTime() - day * (offset + 1)), start);
         },
         async listUpcomingEvents() {
-            if (this.setup) {
-                let response = await gapi.client.calendar.events.list({
-                    'calendarId': 'primary',
-                    'timeMin': (new Date()).toISOString(),
-                    'showDeleted': false,
-                    'singleEvents': true,
-                    'maxResults': 10,
-                    'orderBy': 'startTime'
-                });
-                this.user = response.result.items[0].creator.email;
-                let newStops = [];
-    
-                for (var i = 0; i < response.result.items.length; i++)
-                {
-                    if (response.result.items[i].start.dateTime == null) {
-                        continue;
+            try {
+                if (this.setup) {
+                    let response = await gapi.client.calendar.events.list({
+                        'calendarId': 'primary',
+                        'timeMin': (new Date()).toISOString(),
+                        'showDeleted': false,
+                        'singleEvents': true,
+                        'maxResults': 10,
+                        'orderBy': 'startTime'
+                    });
+                    this.user = response.result.items[0].creator.email;
+                    let newStops = [];
+        
+                    for (var i = 0; i < response.result.items.length; i++)
+                    {
+                        if (response.result.items[i].start.dateTime == null) {
+                            continue;
+                        }
+                        let newStop = {title: response.result.items[i].summary, start: new Date(response.result.items[i].start.dateTime), end: new Date(response.result.items[i].end.dateTime)};
+                        newStops.push(newStop);
                     }
-                    let newStop = {title: response.result.items[i].summary, start: new Date(response.result.items[i].start.dateTime), end: new Date(response.result.items[i].end.dateTime)};
-                    newStops.push(newStop);
-                }
-                this.stops = newStops;
-                this.lastEnd = await this.lastEventEnd();
+                    this.stops = newStops;
+                    this.lastEnd = await this.lastEventEnd();
+                }       
+            } catch (error) {
+                console.log(error);
             }
+
         },
         async count() {
             this.currTime = new Date();
