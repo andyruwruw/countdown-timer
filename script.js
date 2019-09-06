@@ -197,7 +197,6 @@ let app = new Vue({
                 }, function(error) {
                     this.error = JSON.stringify(error, null, 2);
                 });
-                this.user = "Loading";
             } catch (error) {
                 console.log(error);
             }
@@ -253,7 +252,7 @@ let app = new Vue({
                         'maxResults': 10,
                         'orderBy': 'startTime'
                     });
-                    this.user = response.result.items[0].creator.email;
+                    
                     let newStops = [];
         
                     for (var i = 0; i < response.result.items.length; i++)
@@ -265,6 +264,9 @@ let app = new Vue({
                         newStops.push(newStop);
                     }
                     this.stops = newStops;
+                    if (this.stops.length > 0) {
+                        this.user = response.result.items[0].creator.email;
+                    }
                     this.lastEnd = await this.lastEventEnd();
                 }       
             } catch (error) {
