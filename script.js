@@ -1,3 +1,47 @@
+let angles = 0;
+let windowMin = 0;
+windowMin = window.innerHeight;
+if (window.innerWidth < windowMin)
+{
+    windowMin = window.innerWidth;
+}
+
+function setup() {
+    document.documentElement.style.setProperty('--windowSize', windowMin);
+    console.log(windowMin);
+    createCanvas(windowMin * .8, windowMin * .8);
+    noStroke();
+}
+function draw() {
+    background('rgba(0,0,0,0)');
+    pieChart(windowMin * 8, angles);
+}
+
+function pieChart(diameter, data) {
+    clear();
+    let sections = [
+        {value: data, color: "rgba(255, 255, 255, 0.14)"},
+        {value: 360 - data, color: "rgba(238, 238, 238, 0.005)"}
+    ]
+    let lastAngle = radians(-90);
+    for (let i = 0; i < sections.length; i++) {
+        fill(sections[i].color);
+        arc(
+        width / 2,
+        height / 2,
+        diameter,
+        diameter,
+        lastAngle,
+        lastAngle + radians(sections[i].value)
+        );
+        lastAngle += radians(sections[i].value);
+    }
+}
+
+
+
+
+
 function HSVtoRGB(h, s, v) {
     var r, g, b;
     var i;
@@ -115,35 +159,22 @@ let app = new Vue({
     data: {
         user: null,
         stops: [],
-
         currStop: 0,
         gapPrior: false,
-
         currTime: new Date(),
-
         start: null,
         end: null,
-
         lastend: null,
-
         switch: false,
         error: null,
-
         firstCircle: 0,
         secondCircle: 0,
-
-        windowMin: 0,
-        
         countup: 0,
-
         setup: false,
-
         saved: false,
-
         colorTimer: true,
         colorIndex: 0,
         color: "rgb(247, 87, 87)",
-
         colors: [
             {color: "rgb(71,92,122)", index: 0},
             {color: "rgb(247, 177, 91)", index: 1},
@@ -169,10 +200,12 @@ let app = new Vue({
             console.log("Preferences Saved");
         },
         signIn() {
+            if (!TEST_ACTIVE)
             gapi.auth2.getAuthInstance().signIn();
             this.initClient();
         },
         signOut() {
+            if (!TEST_ACTIVE)
             gapi.auth2.getAuthInstance().signOut();
         },
         chooseColor(chosen) {
@@ -186,6 +219,7 @@ let app = new Vue({
         async initClient() {
             try {
                 console.log("Initializing Google API");
+                if (!TEST_ACTIVE)
                 await gapi.client.init({
                     apiKey: API_KEY,
                     clientId: CLIENT_ID,
@@ -212,15 +246,19 @@ let app = new Vue({
         },
         async findLastEvent(offset, start, end) {
             let day = 1000 * 60 * 60 * 24;
-            let response = await gapi.client.calendar.events.list({
-                'calendarId': 'primary',
-                'timeMin': (start).toISOString(),
-                'timeMax': (end).toISOString(),
-                'showDeleted': false,
-                'singleEvents': true,
-                'maxResults': 100,
-                'orderBy': 'startTime'
-            });
+            let response = null;
+            if (!TEST_ACTIVE)
+            {
+                response = await gapi.client.calendar.events.list({
+                    'calendarId': 'primary',
+                    'timeMin': (start).toISOString(),
+                    'timeMax': (end).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'maxResults': 100,
+                    'orderBy': 'startTime'
+                });
+            }
             let potential = null;
             for (var i = 0; i < response.result.items.length; i++)
             {
@@ -244,14 +282,23 @@ let app = new Vue({
         async listUpcomingEvents() {
             try {
                 if (this.setup) {
-                    let response = await gapi.client.calendar.events.list({
-                        'calendarId': 'primary',
-                        'timeMin': (new Date()).toISOString(),
-                        'showDeleted': false,
-                        'singleEvents': true,
-                        'maxResults': 10,
-                        'orderBy': 'startTime'
-                    });
+                    let response = null;
+                    if (!TEST_ACTIVE)
+                    {
+                        response = await gapi.client.calendar.events.list({
+                            'calendarId': 'primary',
+                            'timeMin': (new Date()).toISOString(),
+                            'showDeleted': false,
+                            'singleEvents': true,
+                            'maxResults': 10,
+                            'orderBy': 'startTime'
+                        });
+                    }
+                    else 
+                    {
+                        response = {result: {items: TEST_DATA}};
+                    }
+                    
                     
                     let newStops = [];
         
@@ -282,21 +329,19 @@ let app = new Vue({
         updateCircle() {
             let lastStop = this.start;
             let nextStop = this.end;
-            //console.log("THIS");
-            //this.printThisPls(lastStop);
-           // this.printThisPls(nextStop);
             let gap = nextStop - lastStop;
             let progress = this.currTime.getTime() - lastStop;
             let percent = progress / gap;
-            let firstValue = percent * 360;
-            let secondValue = 0;
-            if (firstValue > 180) {
-                firstValue = 180;
-                secondValue = percent * 360 - 180;
-            }
+            let degrees = percent * 360;
+            angles = degrees;
+            // let secondValue = 0;
+            // if (firstValue > 180) {
+            //     firstValue = 180;
+            //     secondValue = percent * 360 - 180;
+            // }
 
-            this.firstCircle = firstValue;
-            this.secondCircle = secondValue;
+            // this.firstCircle = firstValue;
+            // this.secondCircle = secondValue;
             if (this.colorIndex == -1)
             {
                 if (percent >= 0 && percent <= 1)
@@ -390,10 +435,10 @@ let app = new Vue({
             document.title = string;
         },
         windowSize() {
-            this.windowMin = window.innerHeight;
-            if (window.innerWidth < this.windowMin)
+            windowMin = window.innerHeight;
+            if (window.innerWidth < windowMin)
             {
-                this.windowMin = window.innerWidth;
+                windowMin = window.innerWidth;
             }
         },
         scroll(down) {

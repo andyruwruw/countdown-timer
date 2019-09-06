@@ -8,6 +8,7 @@ body {
     color: #2c3e50;
     margin: 0;
     overflow-x: hidden;
+    position: relative;
 }
 
 :root {
@@ -136,17 +137,19 @@ h3 {
 
 
 
-.circle {
+
+
+canvas {
     display: block;
     position: absolute;
     overflow: hidden;
     width: calc(var(--windowSize) * .8 * 1px); 
     height: calc(var(--windowSize) * .8 * 1px); 
     margin: 0 auto;
-    top: calc((100vh - calc(var(--windowSize) * .85 * 1px)) / 2);
-    left: calc((100vw - calc(var(--windowSize) * .8 * 1px)) / 2);
+    top: calc((100vh - var(--windowSize) * .85 * 1px) / 2);
+    left: calc((100vw - var(--windowSize) * .8 * 1px) / 2);
     background-color: rgba(238, 238, 238, 0.05);
-    border-radius: 100%;
+    border-radius: 100%; 
 }
 
 

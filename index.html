@@ -5,7 +5,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="./assets/icon.ico" />
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./style.css"/>
-    <script src="vue.min.js"></script>
+    <script src="./vue.min.js"></script>
+    <script src="./p5.min.js"></script>
+    <script src="./test.js"></script>
   </head>
   <body>
     <div v-bind:class="{locked: user == null}" :style="'--windowSize :' + windowMin" id="app">
@@ -15,7 +17,7 @@
             <button class="authenticate" @click="signIn()"></button>
         </div>
         <div v-if="user != null" :style="'--backgroundColorValue :' + color" id="main-page">
-            <div  class="circle">
+            <div v-if="false" class="circle">
                 <div class="circle-segment first" :style="'--firstvalue :' + firstCircle"></div>
                 <div class="circle-segment last" :style="'--secondvalue :' + secondCircle"></div>
             </div>
