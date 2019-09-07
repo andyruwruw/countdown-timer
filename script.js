@@ -16,6 +16,7 @@ function setup() {
 function draw() {
     background('rgba(0,0,0,0)');
     if (startDrawing) {
+        document.documentElement.style.setProperty('--canvasOn', "block");
         pieChart(windowMin * 8, angles);
     }
 }
@@ -162,6 +163,7 @@ let app = new Vue({
     data: {
         user: null,
         stops: [],
+        day: [],
         currStop: 0,
         gapPrior: false,
         currTime: new Date(),
@@ -195,8 +197,17 @@ let app = new Vue({
             {color: "RGB(25, 25, 112)", index: 12},
             {color: "RGB(112, 128, 144)", index: 13},
         ],
+        settingOffset: "0vw",
     },
     methods: {
+        settingsPage(page) {
+            if (page == 0) 
+                this.settingOffset = "100vw";
+            else if (page == 1) 
+                this.settingOffset = "0vw";
+            else if (page == 2) 
+                this.settingOffset = "-100vw";
+        },
         saveColor() {
             this.saved = true;
             document.cookie = "color = " + this.colorIndex + "; path=/";
@@ -223,17 +234,19 @@ let app = new Vue({
             try {
                 console.log("Initializing Google API");
                 if (!TEST_ACTIVE)
-                await gapi.client.init({
-                    apiKey: API_KEY,
-                    clientId: CLIENT_ID,
-                    discoveryDocs: DISCOVERY_DOCS,
-                    scope: SCOPES
-                }).then(function () {
-                    // Listen for sign-in state changes.
-                    gapi.auth2.getAuthInstance().isSignedIn.listen();
-                }, function(error) {
-                    this.error = JSON.stringify(error, null, 2);
-                });
+                {
+                    await gapi.client.init({
+                        apiKey: API_KEY,
+                        clientId: CLIENT_ID,
+                        discoveryDocs: DISCOVERY_DOCS,
+                        scope: SCOPES
+                    }).then(function () {
+                        // Listen for sign-in state changes.
+                        gapi.auth2.getAuthInstance().isSignedIn.listen();
+                    }, function(error) {
+                        this.error = JSON.stringify(error, null, 2);
+                    });
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -282,6 +295,46 @@ let app = new Vue({
             }
             return this.findLastEvent(offset + 1, new Date(start.getTime() - day * (offset + 1)), start);
         },
+        async getDay() {
+            this.day = [];
+            let day = 1000 * 60 * 60 * 24;
+            let start = new Date(this.currTime.setHours(0,0,0,0));
+            let end = new Date(start.getTime() + day);
+            let response = null;
+            if (!TEST_ACTIVE)
+            {
+                response = await gapi.client.calendar.events.list({
+                    'calendarId': 'primary',
+                    'timeMin': (start).toISOString(),
+                    'timeMax': (end).toISOString(),
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'maxResults': 100,
+                    'orderBy': 'startTime'
+                });
+            }
+            else {
+                response = TEST_DATA_DAY;
+            }
+            for (var i = 0; i < response.result.items.length; i++) {
+                if (Object.keys(response.result.items[i].start)[0] == 'date')
+                {
+                    continue;
+                } 
+                else {
+                    let eventStart = new Date(response.result.items[i].start.dateTime);
+                    let eventEnd = new Date(response.result.items[i].start.dateTime);
+                    let times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+                    let rightTimes = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+                    let extra0 = "";
+                    if (eventStart.getMinutes() < 10) 
+                        extra0 = "0";
+                    let string = rightTimes[times.findIndex(item => item == eventStart.getHours())] + ":" + extra0 + eventStart.getMinutes();
+                    this.day.push({title: response.result.items[i].summary, start: string, end: eventEnd.getTime()});
+                }
+            }
+            console.log(this.day);
+        },
         async listUpcomingEvents() {
             try {
                 if (this.setup) {
@@ -296,16 +349,18 @@ let app = new Vue({
                             'maxResults': 10,
                             'orderBy': 'startTime'
                         });
+                        this.getDay();
                     }
                     else 
                     {
                         response = {result: {items: TEST_DATA}};
+                        this.getDay();
                     }
                     
                     
                     let newStops = [];
         
-                    for (var i = 0; i < response.result.items.length; i++)
+                    for (var i = response.result.items.length - 1; i >= 0; i--)
                     {
                         if (response.result.items[i].start.dateTime == null) {
                             continue;
@@ -550,6 +605,9 @@ let app = new Vue({
                 startDrawing = true;
             }
             return true;
+        },
+        currTimeMilli() {
+            return this.currTime.getTime();
         }
     },
     created() {

@@ -4,7 +4,10 @@
     <title>Am I Done Yet?</title>
     <link rel="shortcut icon" type="image/x-icon" href="./assets/icon.ico" />
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="./style/style_color.css"/>
+    <link rel="stylesheet" href="./style/style_dayatglance.css"/>
+    <link rel="stylesheet" href="./style/style_main.css"/>
+    <link rel="stylesheet" href="./style/style_profile.css"/>
     <script src="./vue.min.js"></script>
     <script src="./p5.min.js"></script>
     <script src="./test.js"></script>
@@ -34,25 +37,48 @@
             <button @click="scroll(true)"class="scroll-button scroll-down"></button>
         </div>
         
-        <div v-if="user != null" :style="'--backgroundColorValue :' + colorLight" id="settings-div">
+        <div v-if="user != null" :style="'--settingsPage :' + settingOffset" id="settings-div">
             <button @click="scroll(false)"class="scroll-button scroll-up"></button>
-            <div class="header-settings">
-                <button class="user-button" v-if="user == null" @click="signIn()">Authenticate</button>
-                <button class="user-button right" v-if="user != null">{{user}}</button>
-                <button class="user-button" v-if="user != null" @click="signOut()">Sign-Out</button>
-            </div>
-            <div id="color-buttons">
-                <button @click="chooseColor(-1)" class="color-button strobe"></button>
-                <button v-for="color in colors" @click="chooseColor(color.index)" :style="'background-color :' + color.color" class="color-button"></button>
-                
-            </div>
-            <button class="preferences-button" v-bind:class="{savedPref: saved}" @click="saveColor">{{savedText}}</button>
-            <div id="buttons-bottom">
-                <a href="https://github.com/andyruwruw/Countdown-Timer" class="github"></a>
-                <a href="http://andrewdanielyoung.com/" class="home"></a>
+            <div id="setting-pages">
+                <div class="setting-page" id="info-page">
+                    <button @click="settingsPage(1)"class="scroll-button scroll-right"></button>
+                    <p class="event-day-title">Information</p>
+                    <div class="header-settings">
+                        <button class="user-button right" v-if="user != null">{{user}}</button>
+                    </div>
+                    <div id="buttons-bottom">
+                        <a href="https://github.com/andyruwruw/Countdown-Timer" class="github"></a>
+                    </div>
+                </div>
+                <div class="setting-page" id="events-page">
+                    <button @click="settingsPage(2)"class="scroll-button scroll-right"></button>
+                    <button @click="settingsPage(0)"class="scroll-button scroll-left"></button>
+                    <p class="event-day-title">Day at a Glance</p>
+                    <table id="day-table">
+                        <tbody>
+                            <tr v-for="event in day" v-bind:class="{done: currTimeMilli > event.end}">
+                                <td class="event-time">{{event.start}}</td>
+                                <td class="event-title">{{event.title}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="setting-page" id="color-page">
+                    <button @click="settingsPage(1)"class="scroll-button scroll-left"></button>
+                    <p class="event-day-title">Colors</p>
+                    <div id="color-buttons">
+                        <button @click="chooseColor(-1)" class="color-button strobe"></button>
+                        <button v-for="color in colors" @click="chooseColor(color.index)" :style="'background-color :' + color.color" class="color-button"></button>
+                    </div>
+                    <button class="preferences-button" v-bind:class="{savedPref: saved}" @click="saveColor">{{savedText}}</button>
+                </div>
+
             </div>
 
             
+ 
+           
+
         </div>
 
     </div>

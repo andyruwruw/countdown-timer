@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css?family=Francois+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
+
+body {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin: 0;
+    overflow-x: hidden;
+    position: relative;
+}
+
+:root {
+    --firstValue: 0;
+    --secondValue: 0;
+    --windowSize: 0;
+    --backgroundColorValue: rgb(87, 162, 247);
+    --canvasOn: none;
+    --settingsPage: 0vw;
+}
+
+.locked {
+    overflow: hidden;
+}
+
+#login-page {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: RGB(112, 128, 144);
+    
+}
+
+#loading {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(30, 144, 255);
+}
+
+#main-page {
+    position: relative;
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--backgroundColorValue, rgb(87, 162, 247));
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.205);
+}
+
+#settings-div {
+    position: relative;
+    display: block;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgba(207, 207, 207, 0.185);
+    background-repeat: no-repeat, repeat;
+    background-size: 100% 100%, 25% auto;
+}
+
+#center-text {
+    z-index: 0;
+    width: 100vw;
+    margin: auto auto;
+    padding-top: calc((100vh - calc(var(--windowSize) * .5 * 1px)) / 2);
+}
+
+#time {
+    display: flex;
+    width: 95vw;
+    max-width: 1000px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.item {
+    display: block;
+    min-width: 50px;
+    margin: 0 15px;
+}
+
+h1 {
+    font-size: 3em;
+    font-weight: lighter;
+    margin: 0 auto;
+    color: white;
+}
+
+h2 {
+    margin: 0 auto;
+    margin-top: 30px;
+    color: white;
+    display: block;
+    max-width: 40vw;
+}
+
+h3 {
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.575);
+    
+}
+
+@media screen and (min-width: 530px) {
+    .item {
+        min-width: 100px;
+    }
+    h1 {
+        font-size: 5em;
+    }
+    
+    h2 {
+        font-size: 3em;
+    }
+    
+    h3 {
+        font-size: .8em;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .item {
+        min-width: 200px;
+    }
+    h1 {
+        font-size: 10em;
+    }
+    
+    h2 {
+        font-size: 4em;
+    }
+    
+    h3 {
+        font-size: 1em;
+        transform: translateY(-20px);
+    }
+}
+
+canvas {
+    display: var(--canvasOn);
+    position: absolute;
+    overflow: hidden;
+    width: calc(var(--windowSize) * .8 * 1px); 
+    height: calc(var(--windowSize) * .8 * 1px); 
+    margin: 0 auto;
+    top: calc((100vh - var(--windowSize) * .85 * 1px) / 2);
+    left: calc((100vw - var(--windowSize) * .8 * 1px) / 2);
+    background-color: rgba(238, 238, 238, 0.05);
+    border-radius: 100%; 
+}
+
+.item-title {
+    text-overflow: clip;
+}
+
+#calendar-title {
+    font-size: 7em;
+    padding-top: 23vh;
+    margin-bottom: 30px;
+    text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.219);
+    transition: all .5s ease;
+}
+
+#calendar-title:hover {
+    transform: scale(1.2, 1.2) rotate(2deg) translateY(-20px);
+    text-shadow: 10px 4px 5px rgba(0, 0, 0, 0.199);
+}
+
+
+#instructions {
+    display: none;
+    margin: 0 auto;
+    font-size:3em;
+    color: rgba(255, 255, 255, 0.541);
+}
+
+.authenticate {
+    background-image: url("../assets/google.png");
+    background-size: 100% 100%;
+    background-position: center;
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border: 0px;
+    background-color: rgba(255, 255, 255, 0.74);
+    border-radius: 20px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.11);
+    transition: all .2s ease;
+}
+
+.authenticate:hover {
+    transform: scale(1.1, 1.1);
+    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.11);
+    background-color: white;
+}
+
+@keyframes spin {
+    0% {
+        opacity: .3;
+        filter: grayscale(80%);
+        transform: scale(1, 1) rotate(0deg);
+        
+    }
+    100% {
+        opacity: 1;
+        filter: grayscale(0%);
+        transform: scale(1.2, 1.2) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+#setting-pages {
+    position: relative;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.setting-page {
+    position: absolute;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+}
+
+#info-page {
+    left: calc(-100vw + var(--settingsPage));
+}
+
+#events-page {
+    left: calc(0vw + var(--settingsPage));
+}
+
+#color-page {
+    left: calc(100vw + var(--settingsPage));
+}
+
+.scroll-button {
+    position: absolute;
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url("../assets/down-arrow.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-color: rgba(247, 87, 87, 0);
+    border: 0px;
+    opacity: .2;
+    transition: all .3s ease;
+    z-index: 100;
+}
+
+.scroll-button:hover {
+    opacity: 1;
+}
+
+.scroll-button.scroll-down:hover {
+    transform: scale(1, 1);
+}
+
+.scroll-button.scroll-up:hover {
+    transform: scale(1, 1) rotate(180deg);
+}
+
+.scroll-button.scroll-right:hover {
+    transform: scale(1, 1) rotate(-90deg);
+}
+
+.scroll-button.scroll-left:hover {
+    transform: scale(1, 1) rotate(90deg);
+}
+
+.scroll-down {
+    left: calc((100vw - 40px) / 2);
+    bottom: 20px;
+    transform: scale(.5, .5);
+    filter: invert(100%);
+}
+
+.scroll-up {
+    left: calc((100vw - 40px) / 2);
+    top: 20px;
+    transform: rotate(180deg) scale(.5, .5);
+}
+
+.scroll-right {
+    right: 30px;
+    top: calc((100vh - 40px) / 2);
+    transform: rotate(-90deg) scale(.5, .5);
+}
+
+.scroll-left {
+    left: 30px;
+    top: calc((100vh - 40px) / 2);
+    transform: rotate(90deg) scale(.5, .5);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+.color-button {
+    --buttoncolor: rgb(0,0,0);
+    padding-top: 85px;
+    display: block;
+    width: 5vw;
+    min-width: 80px;
+    min-height: 80px;
+    height: 5vw;
+    border: 1px solid rgba(238, 238, 238, 0.05);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.185);
+    transition: all .2s ease;
+    margin:20px;
+    border-radius: 5px;
+    background-color: var(--buttoncolor);
+}
+
+.color-button:hover {
+    transform: scale(1.1, 1.1);
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.185);
+}
+
+#color-buttons {
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 700px;
+}
+
+.preferences-button {
+    display: block;
+    width: 40vw;
+    border-radius: 5px;
+    height: 70px;
+    color: black;
+    transition: all .2s ease;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    font-size: 1.6em;
+    margin: 0 auto;
+    max-width: 300px;
+    max-height: 150px;
+    border: 0px;
+    margin-top: 35px;
+    background-color: rgba(164, 201, 235, 0.637);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+}
+
+.savedPref {
+    background-color: rgba(224, 224, 224, 0.623) !important;
+    color: rgb(197, 197, 197);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+}
+
+.preferences-button:hover {
+    background-color: rgb(89, 139, 248);
+    color: white;
+}
+
+.strobe {
+    animation: strobe-colors 4s ease 0s infinite;
+}
+
+@keyframes strobe-colors {
+    0% {
+        background-color: rgb(216, 76, 76);
+    }
+    25% {
+        background-color: rgb(216, 216, 76);
+    }
+    50% {
+        background-color: rgb(66, 154, 42);
+    }
+    75% {
+        background-color: rgb(216, 216, 76);
+    }
+    100% {
+        background-color: rgb(216, 76, 76);
+    }
+}

@@ -1,0 +1,80 @@
+.event-day-title {
+    margin: 100px 0px 30px 0px;
+    font-size: 3em;
+    color: rgb(221, 221, 221);
+    text-shadow: 1px 1px 2px #27272723;
+}
+
+#day-table {
+    display: flex;
+    margin: 0 auto;
+    max-height: calc((100vh - 100px - 30px - 55px) * .8);
+
+    padding: 0px 80px;
+    overflow: scroll;
+    overflow-x: visible;
+}
+
+tbody {
+    margin: 0 auto;
+}
+
+table::-webkit-scrollbar {
+    width: 1em;
+}
+ 
+table::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+}
+ 
+table::-webkit-scrollbar-thumb {
+  background-color: rgba(169, 169, 169, 0);
+  outline: 1px solid rgba(89, 103, 117, 0);
+}
+
+tr {
+    height: 20px;
+    transition: all .3s ease;
+    text-shadow: 1px 1px 2px #2727271a;
+    margin: 0 auto;
+}
+
+tr:hover {
+    transform: scale(1.1, 1.1);
+    text-shadow: 6px 3px 4px #2727271a;
+}
+
+table, tr, td {
+    padding: 0px;
+}
+
+td {
+    font-size: 2em;
+    font-family: 'Noto Sans', sans-serif;
+    padding: 10px 20px;
+}
+
+td.event-time {
+    text-align: right;
+    width: 80px;
+    color: rgb(160, 160, 160);
+}
+
+td.event-title {
+    color: rgb(45, 45, 58);
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+tr.done td.event-title {
+    text-decoration: line-through;
+    color: #dbdbdb;
+}
+
+tr.done td.event-time {
+    text-decoration: line-through;
+    color: #dbdbdb;
+}

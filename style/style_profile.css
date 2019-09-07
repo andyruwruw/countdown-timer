@@ -1,0 +1,83 @@
+.user-name {
+    display: block;
+    width: 40vw;
+    max-width: 300px;
+    background-color: rgba(0, 0, 0, 0.205);
+    border: 1px solid rgba(0, 0, 0, 0.384);
+    border-radius: 5px;
+    font-size: 1em;
+    height: 50px;
+    color: black;
+}
+
+.user-button {
+    display: block;
+    width: 40vw;
+    max-width: 400px;
+    min-width: 200px;
+    background-color: rgba(235, 235, 235, 0.473);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.055);
+    border: 0px solid rgba(3, 3, 3, 0.137);
+    border-radius: 5px;
+    height: 70px;
+    font-size: 1.6em;
+    color: black;
+    transition: all .2s ease;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.user-button:hover {
+    transform: scale(1.1, 1.1);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.185);
+}
+.right {
+    margin-right: 0px;
+}
+
+.header-settings {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    align-items: center;
+}
+
+#buttons-bottom {
+    width: 100vw;
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+}
+
+a {
+    width: 40px;
+    height: 40px;
+    display: block;
+    background-size: 100% 100%;
+    opacity: .3;
+    filter: grayscale(80%);
+    margin: 0 8px;
+    transition: all .5s ease;
+}
+
+a:hover {
+    animation: spin .5s ease;
+    filter: grayscale(0%);
+    transform: scale(1.2, 1.2);
+    opacity: 1;
+
+}
+
+.github {
+    background-image: url("../assets/github.png");
+    
+}
+
+.home {
+    background-image: url("../assets/home.png");
+}
