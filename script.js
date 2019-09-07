@@ -8,8 +8,8 @@ if (window.innerWidth < windowMin)
 }
 
 function setup() {
+    console.log("%cSetting up P5 Canvas.", "color: purple");
     document.documentElement.style.setProperty('--windowSize', windowMin);
-    console.log(windowMin);
     createCanvas(windowMin * .8, windowMin * .8);
     noStroke();
 }
@@ -248,7 +248,7 @@ let app = new Vue({
                     });
                 }
             } catch (error) {
-                console.log(error);
+                console.log("%cInitializing Google API.", "color: red=");
             }
             this.setup = true;
             await this.listUpcomingEvents();
@@ -374,12 +374,13 @@ let app = new Vue({
                     this.stops = newStops;
                     if (this.stops.length > 0) {
                         this.user = response.result.items[0].creator.email;
+                        console.log("%cBeginning Continuous Drawing to Canvas.", "color: purple");
                         startDrawing = true;
                     }
                     this.lastEnd = await this.lastEventEnd();
                 }       
             } catch (error) {
-                console.log(error);
+                let do_no_thing_lol = true;
             }
 
         },
@@ -453,6 +454,7 @@ let app = new Vue({
                     this.start = this.stops[this.currStop].start.getTime();
                     this.end = this.stops[this.currStop].end.getTime();
                 }
+                console.log(this.currStop);
             }
         },
         toString(remainder) {
