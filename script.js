@@ -1,5 +1,6 @@
 let angles = 0;
 let windowMin = 0;
+let startDrawing = false;
 windowMin = window.innerHeight;
 if (window.innerWidth < windowMin)
 {
@@ -14,7 +15,9 @@ function setup() {
 }
 function draw() {
     background('rgba(0,0,0,0)');
-    pieChart(windowMin * 8, angles);
+    if (startDrawing) {
+        pieChart(windowMin * 8, angles);
+    }
 }
 
 function pieChart(diameter, data) {
@@ -541,6 +544,12 @@ let app = new Vue({
                 return "Save Preference";
             }
         },
+        startCanvas() {
+            if (this.user != null) {
+                startDrawing = true;
+            }
+            return true;
+        }
     },
     created() {
         this.initClient();
