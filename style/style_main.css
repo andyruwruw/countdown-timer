@@ -229,14 +229,17 @@ canvas {
 }
 
 #info-page {
+    transition: all .3s ease;
     left: calc(-100vw + var(--settingsPage));
 }
 
 #events-page {
+    transition: all .3s ease;
     left: calc(0vw + var(--settingsPage));
 }
 
 #color-page {
+    transition: all .3s ease;
     left: calc(100vw + var(--settingsPage));
 }
 
