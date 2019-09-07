@@ -75,6 +75,7 @@ tr.done td.event-title, tr.done td.event-time {
 }
 
 tr.active td.event-time, tr.active td.event-title {
-    color: var(--backgroundColorValue, black);
+    transform: scale(1.05 1.05);
+    text-shadow: 4px 2px 3px #2727271a;
     font-weight: bolder;
 }
