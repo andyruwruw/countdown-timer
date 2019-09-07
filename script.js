@@ -325,14 +325,14 @@ let app = new Vue({
                 } 
                 else {
                     let eventStart = new Date(response.result.items[i].start.dateTime);
-                    let eventEnd = new Date(response.result.items[i].start.dateTime);
+                    let eventEnd = new Date(response.result.items[i].end.dateTime);
                     let times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
                     let rightTimes = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
                     let extra0 = "";
                     if (eventStart.getMinutes() < 10) 
                         extra0 = "0";
                     let string = rightTimes[times.findIndex(item => item == eventStart.getHours())] + ":" + extra0 + eventStart.getMinutes();
-                    this.day.push({title: response.result.items[i].summary, start: string, end: eventEnd.getTime()});
+                    this.day.push({title: response.result.items[i].summary, string: string, start: eventStart.getTime(), end: eventEnd.getTime()});
                 }
             }
         },

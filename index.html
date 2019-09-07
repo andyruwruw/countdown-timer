@@ -50,14 +50,14 @@
                         <a href="https://github.com/andyruwruw/Countdown-Timer" class="github"></a>
                     </div>
                 </div>
-                <div class="setting-page" id="events-page">
+                <div class="setting-page" :style="'--backgroundColorValue :' + color" id="events-page">
                     <button @click="settingsPage(2)"class="scroll-button scroll-right"></button>
                     <button @click="settingsPage(0)"class="scroll-button scroll-left"></button>
                     <p class="event-day-title">Day at a Glance</p>
                     <table id="day-table">
                         <tbody>
-                            <tr v-for="event in day" v-bind:class="{done: currTimeMilli > event.end}">
-                                <td class="event-time">{{event.start}}</td>
+                            <tr v-for="event in day" v-bind:class="{done: currTimeMilli > event.end, active: currTimeMilli < event.end && currTimeMilli > event.start}">
+                                <td class="event-time">{{event.string}}</td>
                                 <td class="event-title">{{event.title}}</td>
                             </tr>
                         </tbody>
