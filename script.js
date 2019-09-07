@@ -232,7 +232,7 @@ let app = new Vue({
         },
         async initClient() {
             try {
-                console.log("Initializing Google API");
+                console.log("%cInitializing Google API.", "color: orange");
                 if (!TEST_ACTIVE)
                 {
                     await gapi.client.init({
@@ -255,6 +255,7 @@ let app = new Vue({
             setInterval(this.count, 100);
         },
         async lastEventEnd() {
+            console.log("%cFinding Last Finshed Event.", "color: blue");
             let day = 1000 * 60 * 60 * 24;
             let start = new Date(this.currTime.setHours(0,0,0,0));
             let end = new Date(start.getTime() + day);
@@ -296,6 +297,7 @@ let app = new Vue({
             return this.findLastEvent(offset + 1, new Date(start.getTime() - day * (offset + 1)), start);
         },
         async getDay() {
+            console.log("%cGetting Today's Events.", "color: blue");
             this.day = [];
             let day = 1000 * 60 * 60 * 24;
             let start = new Date(this.currTime.setHours(0,0,0,0));
@@ -333,10 +335,10 @@ let app = new Vue({
                     this.day.push({title: response.result.items[i].summary, start: string, end: eventEnd.getTime()});
                 }
             }
-            console.log(this.day);
         },
         async listUpcomingEvents() {
             try {
+                console.log("%cGetting Next 10 Events.", "color: blue");
                 if (this.setup) {
                     let response = null;
                     if (!TEST_ACTIVE)
@@ -349,6 +351,7 @@ let app = new Vue({
                             'maxResults': 10,
                             'orderBy': 'startTime'
                         });
+                        console.log(response);
                         this.getDay();
                     }
                     else 
@@ -421,6 +424,7 @@ let app = new Vue({
             }
             if (this.end < this.currTime.getTime() || this.start == null) {
                 while (this.stops[this.currStop].end.getTime() < this.currTime.getTime()) {
+                    console.log("%cMoving to the Next Event.", "color: black");
                     this.currStop += 1;
                     if (this.currStop > this.stops.length - 1)
                     {
@@ -623,7 +627,7 @@ let app = new Vue({
             else {
                 this.colorTimer = false;
             }
-            console.log("Preferences Loaded");
+            console.log("%cFinding Last Finshed Event.", "color: blue");
         }
     }
 });
