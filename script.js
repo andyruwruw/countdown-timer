@@ -316,6 +316,7 @@ let app = new Vue({
                     this.stops = newStops;
                     if (this.stops.length > 0) {
                         this.user = response.result.items[0].creator.email;
+                        startDrawing = true;
                     }
                     this.lastEnd = await this.lastEventEnd();
                 }       
