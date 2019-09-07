@@ -362,7 +362,7 @@ let app = new Vue({
                     
                     let newStops = [];
         
-                    for (var i = response.result.items.length - 1; i >= 0; i--)
+                    for (var i = 0; i < response.result.items.length; i++)
                     {
                         if (response.result.items[i].start.dateTime == null) {
                             continue;
