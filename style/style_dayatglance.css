@@ -76,7 +76,7 @@ tr.done td.event-title, tr.done td.event-time {
 
 tr.active td.event-time, tr.active td.event-title {
     font-weight: bolder;
-    animation: strobe-active 1s ease 0s infinite;
+    animation: strobe-active 2s ease 0s infinite;
 }
 
 @keyframes strobe-active {
@@ -84,7 +84,7 @@ tr.active td.event-time, tr.active td.event-title {
         opacity: 1;
     }
     50% {
-        opacity: .7;
+        opacity: .5;
     }
     100% {
         opacity: 1;
