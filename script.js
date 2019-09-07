@@ -248,7 +248,7 @@ let app = new Vue({
                     });
                 }
             } catch (error) {
-                console.log("%cInitializing Google API.", "color: red=");
+                let do_no_thing_lol = true;
             }
             this.setup = true;
             await this.listUpcomingEvents();
@@ -351,7 +351,6 @@ let app = new Vue({
                             'maxResults': 10,
                             'orderBy': 'startTime'
                         });
-                        console.log(response);
                         this.getDay();
                     }
                     else 
@@ -372,6 +371,7 @@ let app = new Vue({
                         newStops.push(newStop);
                     }
                     this.stops = newStops;
+                    console.log(this.stops);
                     if (this.stops.length > 0) {
                         this.user = response.result.items[0].creator.email;
                         console.log("%cBeginning Continuous Drawing to Canvas.", "color: purple");
