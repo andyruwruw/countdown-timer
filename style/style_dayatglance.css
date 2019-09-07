@@ -75,7 +75,18 @@ tr.done td.event-title, tr.done td.event-time {
 }
 
 tr.active td.event-time, tr.active td.event-title {
-    transform: scale(1.05 1.05);
-    text-shadow: 4px 2px 3px #2727271a;
     font-weight: bolder;
+    animation: strobe-active 1s ease;
+}
+
+@keyframes strobe-active {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .7;
+    }
+    100% {
+        opacity: 1;
+    }
 }
