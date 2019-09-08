@@ -1,6 +1,7 @@
 # Countdown-Timer
 
 Generates timers based on the closest or current event on your google calendar.
+Available Here: [https://counter.andrewdanielyoung.com](https://counter.andrewdanielyoung.com)
 
 ## Permissions
 
@@ -43,4 +44,4 @@ It has since then been changed to a canvas element using the P5 library to draw.
 
 ## License
 
-Available under the MIT license.
+[Available under the MIT license.](./LICENSE.txt)
