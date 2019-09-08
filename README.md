@@ -8,6 +8,16 @@ Granting the website access to your google account only allows it to view calend
 
 [script.js](./script.js) only makes two server calls, both to the Google Calendar API.
 
+## Usage Details
+
+Countdown-Timer will display how much time remains until an active event ends, or in lack of a current event, how long until your next event. 
+
+Using Google Calendar's API, the application will query your default calendar. Switching calendars is unavailable at the moment.
+
+If two events are active, the timer will default to the event that began first.
+
+Colors can be changed to user preference and the second page of the settings, to the right.
+
 ## Further Use
 
 The API key for google calendar is only valid from the URL [https://counter.andrewdanielyoung.com](https://counter.andrewdanielyoung.com), so sadly the code can't be removed from that location.
