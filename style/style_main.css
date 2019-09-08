@@ -74,6 +74,7 @@ body {
     align-items: center;
     margin: 0 auto;
     flex-wrap: wrap;
+    text-shadow: 2px 2px 3px rgba(15,15,15,.2);
 }
 
 .item {
@@ -157,10 +158,12 @@ canvas {
     left: calc((100vw - var(--windowSize) * .8 * 1px) / 2);
     background-color: rgba(238, 238, 238, 0.05);
     border-radius: 100%; 
+    box-shadow: 3px 3px 5px rgba(15,15,15,.15);
 }
 
 .item-title {
     text-overflow: clip;
+    text-shadow: 2px 2px 3px rgba(15,15,15,.2);
 }
 
 #calendar-title {
