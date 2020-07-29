@@ -1,0 +1,48 @@
+[
+  {
+    "kind":"calendar#calendarListEntry",
+    "etag":"\"1591640069564000\"",
+    "id":"youngshome.com_h849k3a825vio5bsa2p4jsb3a8@group.calendar.google.com",
+    "summary":"AY Chess.com Hours",
+    "timeZone":"America/Denver",
+    "colorId":"18",
+    "backgroundColor":"#b99aff",
+    "foregroundColor":"#000000",
+    "selected":true,
+    "accessRole":"owner",
+    "defaultReminders":[],
+    "conferenceProperties": {
+      "allowedConferenceSolutionTypes":["hangoutsMeet"]
+    }
+  },
+  {
+    "kind":"calendar#calendarListEntry",
+    "etag":"\"1591714450682000\"",
+    "id":"andrew@youngshome.com",
+    "summary":"Andrew's Schedule",
+    "description":"\n",
+    "timeZone":"America/Los_Angeles",
+    "colorId":"16",
+    "backgroundColor":"#4986e7",
+    "foregroundColor":"#000000",
+    "selected":true,
+    "accessRole":"owner",
+    "defaultReminders":[],
+    "notificationSettings": {
+      "notifications":[
+        {
+          "type":"eventCancellation",
+          "method":"email"
+        },
+        {
+          "type":"eventResponse",
+          "method":"email"
+        }
+      ]
+    },
+    "primary":true,
+    "conferenceProperties": {
+      "allowedConferenceSolutionTypes":["hangoutsMeet"]
+    }
+  }
+]

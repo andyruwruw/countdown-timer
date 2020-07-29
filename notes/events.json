@@ -1,0 +1,41 @@
+[
+  {
+    "kind":"calendar#event",
+    "etag":"\"3156650049666000\"",
+    "id":"7moqlf93ek0irue9im9djtiqdu_20200729T060000Z",
+    "status":"confirmed",
+    "htmlLink":"https://www.google.com/calendar/event?eid=N21vcWxmOTNlazBpcnVlOWltOWRqdGlxZHVfMjAyMDA3MjlUMDYwMDAwWiBhbmRyZXdAeW91bmdzaG9tZS5jb20",
+    "created":"2020-01-06T15:36:28.000Z",
+    "updated":"2020-01-06T15:37:04.833Z",
+    "summary":"Sleep",
+    "colorId":"5",
+    "creator": {
+      "email":"andrew@youngshome.com",
+      "displayName":"Andrew Young",
+      "self":true
+    },
+    "organizer": {
+      "email":"andrew@youngshome.com",
+      "displayName":"Andrew Young",
+      "self":true
+    },
+    "start": {
+      "dateTime":"2020-07-28T23:00:00-07:00",
+      "timeZone":"America/Denver"
+    },
+    "end": {
+      "dateTime":"2020-07-29T06:00:00-07:00",
+      "timeZone":"America/Denver"
+    },
+    "recurringEventId":"7moqlf93ek0irue9im9djtiqdu",
+    "originalStartTime": {
+      "dateTime":"2020-07-28T23:00:00-07:00",
+      "timeZone":"America/Denver"
+    },
+    "iCalUID":"7moqlf93ek0irue9im9djtiqdu@google.com",
+    "sequence":1,
+    "reminders": {
+      "useDefault":true
+    }
+  }
+]
