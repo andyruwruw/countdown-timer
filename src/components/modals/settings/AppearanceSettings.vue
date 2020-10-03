@@ -22,7 +22,8 @@
                 v-bind="attrs"
                 v-on="on"
                 :class="$style['color-chip']"
-                :style="{ background: color.background }">
+                :style="{ background: color.background }"
+                @click="changeColor(index)">
                 <div
                   :class="$style.inner"
                   :style="{ 'background': color.primary }">
@@ -30,6 +31,14 @@
                     :class="$style.segment"
                     :style="{ '--color': color.secondary }" />
                 </div>
+
+                <v-icon
+                  v-if="selected === index"
+                  dark
+                  large
+                  :class="$style.active">
+                  mdi-check
+                </v-icon>
               </div>
             </template>
 
@@ -49,8 +58,12 @@ import { colorCSS } from '@/utils/colors';
 
 export default {
   name: 'AppearanceSettings',
+  data: () => ({
+    selected: 0,
+  }),
   computed: {
     ...mapGetters('user', [
+      'colorIndex',
       'colors',
       'primaryColor',
       'secondaryColor',
@@ -58,9 +71,13 @@ export default {
   },
   methods: {
     colorCSS: colorCSS,
+    changeColor(index) {
+      this.selected = index;
+      this.$emit('change', { colors: index });
+    },
   },
   created() {
-    console.log(this.colors);
+    this.selected = this.colorIndex;
   }
 }
 </script>
@@ -96,6 +113,16 @@ export default {
   margin: 6px;
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
   transition: all .3s ease;
+  border: 2px solid white;
+  position: relative;
+}
+
+.color-chip .active {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .color-chip:hover {

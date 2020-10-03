@@ -48,10 +48,11 @@ export default async function (req: NowRequest, res: NowResponse) {
 
       events = events.concat(response.data.items);
     }
-
+    await mongoose.connection.close();
     return res.status(200).send(events);
   } catch (error) {
     console.log(error);
+    await mongoose.connection.close();
     return res.status(400).send('U broke it');
   }
 };

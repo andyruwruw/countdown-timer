@@ -38,5 +38,5 @@ export const defaultUserObject = (userID) => {
 export const userExists = async (userID) => {
   return await User.findOne({
     username: userID,
-  }) != null;
+  }) !== null;
 }

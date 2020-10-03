@@ -10,7 +10,8 @@
       elevation="0"
       :class="{
         'logged-in': user,
-      }">
+      }"
+      :dark="dark">
       <div class="d-flex align-center justify-space-between app-bar-content">
         <span class="title">
           countdown timer
@@ -24,21 +25,24 @@
             Sign in with Google
           </v-btn>
 
-          <v-dialog
-            v-model="dialog"
-            width="90vw"
-            max-width="800">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-                :text="true">
-                Settings
-              </v-btn>
-            </template>
+          <div v-if="user">
+            <v-dialog
+              v-model="dialog"
+              width="90vw"
+              max-width="800">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  
+                  v-bind="attrs"
+                  v-on="on"
+                  :text="true">
+                  Settings
+                </v-btn>
+              </template>
 
-            <settings-component @close="closeSettings"/>
-          </v-dialog>
+              <settings-component @close="closeSettings"/>
+            </v-dialog>
+          </div>
 
           <v-btn
             v-if="user"
@@ -72,6 +76,7 @@ export default {
     ...mapGetters('user', [
       'user',
       'backgroundColor',
+      'dark',
     ]),
   },
   methods: {

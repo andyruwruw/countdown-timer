@@ -7,6 +7,7 @@ const moduleState = {
 
 const moduleMutations = {
   setUser(state, user) {
+    console.log(user);
     state.user = user;
   },
 };
@@ -30,6 +31,12 @@ const moduleGetters = {
       return colorThemes[state.user.colors].secondary;
     }
     return colorThemes[0].secondary;
+  },
+  colorIndex: (state) => {
+    if (state.user) {
+      return state.user.colors;
+    }
+    return 0;
   },
   dark: (state) => {
     if (state.user) {
@@ -66,7 +73,7 @@ const moduleActions = {
   },
   async changePreferences(context, payload) {
     let { data } = await axios.post('/api/preferences', payload);
-    context.commit('setUser', data);
+    await context.commit('setUser', data);
   }
 };
 

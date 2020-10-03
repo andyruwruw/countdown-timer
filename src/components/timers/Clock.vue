@@ -7,8 +7,7 @@
 
 <script>
 import VueP5 from 'vue-p5';
-import { mapGetters } from 'vuex';
-// import { colorCSS } from '@/utils/colors';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Clock',
@@ -25,6 +24,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions('event', [
+      'eventExpired',
+    ]),
     setup(sketch) {
       sketch.resizeCanvas(this.size, this.size);
       this.currSize = this.size;
@@ -33,16 +35,28 @@ export default {
     },
     draw(sketch) {
       if (this.nextEvent) {
+        let now = (new Date()).getTime();
+        if (this.nextStop < now) {
+          this.eventExpired();
+        }
         if (this.currSize !== this.size) {
           sketch.resizeCanvas(this.size, this.size);
           this.currSize = this.size;
         }
-
         sketch.clear();
         sketch.background(this.backgroundColor);
-      
-        let now = (new Date()).getTime();
-        let completion = now / (this.end - this.start) * 360;
+        let completion = now / (this.nextStop - this.lastStop) * 360;
+
+        sketch.fill('rgba(0,0,0,.1)');
+        sketch.arc(
+          (this.size / 2) + 3,
+          (this.size / 2) + 3,
+          this.size - 8,
+          this.size - 8,
+          sketch.radians(0),
+          sketch.radians(360)
+        );
+
         let sections = [
           {value: completion, color: this.primaryColor},
           {value: 360 - completion, color: this.secondaryColor}
@@ -55,8 +69,8 @@ export default {
           sketch.arc(
             this.size / 2,
             this.size / 2,
-            this.size,
-            this.size,
+            this.size - 8,
+            this.size - 8,
             lastAngle,
             lastAngle + sketch.radians(sections[i].value)
           );
@@ -72,14 +86,9 @@ export default {
       'backgroundColor',
     ]),
     ...mapGetters('event', [
-      'nextEvent',
+      'nextStop',
+      'lastStop',
     ]),
-    start() {
-      return this.nextEvent.start.time;
-    },
-    end() {
-      return this.nextEvent.end.time;
-    },
   },
 };
 </script>

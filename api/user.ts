@@ -21,5 +21,6 @@ export default async function (req: NowRequest, res: NowResponse) {
   const user = await User.findOne({
     username: userID,
   });
+  await mongoose.connection.close();
   return res.send(user);
 };

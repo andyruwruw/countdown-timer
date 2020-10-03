@@ -4,46 +4,56 @@
       {{ timeTil }}
     </p>
 
-    <p :class="$style.title">
-      {{ title }}
+    <p
+      :class="$style.title"
+      :style="{ 'maxWidth': `${size}px` }">
+      {{ prior ? 'Until' : ''}} {{ title }}
     </p>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import moment from 'moment';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'TimeRemaining',
+  props: {
+    size: {
+      type: Number,
+      default: 400,
+    },
+  },
   computed: {
     ...mapGetters('event', [
-      'nextEvent',
+      'event',
+      'lastStop',
       'nextStop',
-      'eventActive',
+      'prior',
+      'timeTil',
     ]),
-    timeTil() {
-      if (this.nextStop) {
-        return moment(this.nextStop).fromNow(true);
+    title() {
+      if (this.event) {
+        if (this.prior) {
+          return `Until ${this.event.summary}`;
+        }
+        return this.event.summary;
       }
       return '';
     },
-    title() {
-      if (this.nextEvent) {
-        if (this.eventActive) {
-          return this.nextEvent.summary;
-        }
-        return `Until ${this.nextEvent.summary}`;
-      }
-      return '';
-    }
   },
+  watch: {
+    timeTil(value) {
+      console.log(value);
+    }
+  }
 };
 </script>
 
 <style module>
 .component p {
+  margin: 0 auto;
   text-align: center;
+  word-wrap: normal;
 }
 
 .time-til {

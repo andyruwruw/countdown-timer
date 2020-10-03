@@ -18,11 +18,16 @@ export default async function (req: NowRequest, res: NowResponse) {
   const { userID } = await parseCookie(req);
   const changes = req.body;
 
-  const user = await User.updateOne({
+  await User.updateOne({
     username: userID,
   }, {
     $set: changes,
   });
+  
+  const user = await User.findOne({
+    username: userID,
+  });
+  await mongoose.connection.close();
   return res.send(user);
 };
 

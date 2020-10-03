@@ -46,10 +46,11 @@ export default async function (req: NowRequest, res: NowResponse) {
     }, "24h");
 
     res.setHeader('Set-Cookie', [`cday-token=${webToken}; SameSite=Strict`]);
-
+    await mongoose.connection.close();
     return res.status(200).send(user);
   } catch (error) {
     console.log(error);
+    await mongoose.connection.close();
     return res.status(400).send('U broke it');
   }
 }

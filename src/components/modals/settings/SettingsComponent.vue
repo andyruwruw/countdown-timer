@@ -20,7 +20,7 @@
               <v-tab>
                 <v-icon left>mdi-account</v-icon>
                 Account
-              </v-tab> 
+              </v-tab>
 
               <v-tab>
                 <v-icon left>mdi-format-color-fill</v-icon>
@@ -30,8 +30,10 @@
           </div>
 
           <v-btn
+            color="primary"
             :class="$style.save"
-            color="primary">
+            :loading="saving"
+            @click="save">
             Save
           </v-btn>
         </div>
@@ -43,7 +45,7 @@
         </div>
 
         <div v-if="tab === 1">
-          <appearance-settings />
+          <appearance-settings @change="changeMade" />
         </div>
       </div>
     </div>
@@ -53,6 +55,7 @@
 <script>
 import AccountSettings from '@/components/modals/settings/AccountSettings.vue';
 import AppearanceSettings from '@/components/modals/settings/AppearanceSettings.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Settings',
@@ -66,7 +69,37 @@ export default {
       'Account',
       'Appearance',
     ],
+    changes: {},
+    saving: false,
   }),
+  computed: {
+    ...mapGetters('user', [
+      'user',
+    ]),
+  },
+  methods: {
+    ...mapActions('user', [
+      'changePreferences',
+    ]),
+    changeMade(change) {
+      for (let key in change) {
+        if (this.user[key] !== change[key]) {
+          this.changes[key] = change[key];
+        } else {
+          delete this.changes[key];
+        }
+      }
+    },
+    async save() {
+      this.saving = true;
+      await this.changePreferences(this.changes);
+      this.saving = false;
+      this.$emit('close');
+    },
+    close() {
+      this.$emit('close');
+    },
+  },
 };
 </script>
 

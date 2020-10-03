@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.authenticate">
-    <img src="../assets/loading.svg"/>
+    <loading />
 
     <p>
       Authenticating with Google
@@ -10,17 +10,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import Loading from '@/components/misc/Loading.vue';
 
 export default {
   name: 'Authenticate',
-  async created() {
-    const code = this.$route.query.code;
-    await this.authenticate(code);
-  },
-  methods: {
-    ...mapActions('user', [
-      'authenticate',
-    ]),
+  components: {
+    Loading,
   },
   computed: {
     ...mapGetters('user', [
@@ -33,7 +28,16 @@ export default {
         this.$router.push('/');
       }
     }
-  }
+  },
+  methods: {
+    ...mapActions('user', [
+      'authenticate',
+    ]),
+  },
+  async created() {
+    const code = this.$route.query.code;
+    await this.authenticate(code);
+  },
 };
 </script>
 
@@ -41,7 +45,12 @@ export default {
 .authenticate {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100%;
+}
+
+.authenticate p {
+  margin-top: 24px;
 }
 </style>
