@@ -11,7 +11,7 @@ const {
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
   CLIENT_SECRET,
-  ENVIRONMENT === 'develop' ? 'http://localhost:8080/authenticate/' : 'countdown-timer.andyruwruw.vercel.app/authenticate/',
+  ENVIRONMENT === 'develop' ? 'http://localhost:3000/authenticate/' : 'countdown-timer.andyruwruw.vercel.app/authenticate/',
 );
 
 export const getToken = async (code) => {

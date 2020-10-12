@@ -1,15 +1,20 @@
 <template>
-  <div :class="$style.authenticate">
-    <loading />
+  <div :class="$style.component">
+    <div :class="$style.content">
+      <loading />
 
-    <p>
-      Authenticating with Google
-    </p>
+      <p>
+        Authenticating with Google
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import {
+  mapGetters,
+  mapActions,
+} from 'vuex'
 import Loading from '@/components/misc/Loading.vue';
 
 export default {
@@ -35,14 +40,13 @@ export default {
     ]),
   },
   async created() {
-    const code = this.$route.query.code;
-    await this.authenticate(code);
+    await this.authenticate(this.$route.query.code);
   },
 };
 </script>
 
 <style module>
-.authenticate {
+.component {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -50,7 +54,17 @@ export default {
   height: 100%;
 }
 
-.authenticate p {
-  margin-top: 24px;
+.content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 5rem;
+}
+
+.content p {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: rgb(90, 90, 90);
 }
 </style>

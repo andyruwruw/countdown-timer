@@ -4,56 +4,6 @@
     :style="{
       'background': backgroundColor,
     }">
-    <v-app-bar
-      app
-      color="transparent"
-      elevation="0"
-      :class="{
-        'logged-in': user,
-      }"
-      :dark="dark">
-      <div class="d-flex align-center justify-space-between app-bar-content">
-        <span class="title">
-          countdown timer
-        </span>
-
-        <div class="d-flex align-center justify-flex-end">
-          <v-btn
-            v-if="!user"
-            :text="true"
-            @click="login">
-            Sign in with Google
-          </v-btn>
-
-          <div v-if="user">
-            <v-dialog
-              v-model="dialog"
-              width="90vw"
-              max-width="800">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  
-                  v-bind="attrs"
-                  v-on="on"
-                  :text="true">
-                  Settings
-                </v-btn>
-              </template>
-
-              <settings-component @close="closeSettings"/>
-            </v-dialog>
-          </div>
-
-          <v-btn
-            v-if="user"
-            :text="true"
-            @click="logout">
-            Logout
-          </v-btn>
-        </div>
-      </div>
-    </v-app-bar>
-
     <v-main>
       <router-view></router-view>
     </v-main>
@@ -62,29 +12,26 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import SettingsComponent from '@/components/modals/settings/SettingsComponent.vue';
 
 export default {
   name: 'App',
-  components: {
-    SettingsComponent,
-  },
-  data: () => ({
-    dialog: false,
-  }),
   computed: {
     ...mapGetters('user', [
       'user',
       'backgroundColor',
       'dark',
     ]),
+    ...mapGetters('event', [
+      'eventsPresent',
+    ]),
+    ...mapGetters('calendar', [
+      'calendarsPresent',
+    ]),
   },
   methods: {
     ...mapActions('user', [
       'getUser',
       'checkStatus',
-      'login',
-      'logout',
     ]),
     ...mapActions('event', [
       'getEvents',
@@ -98,11 +45,17 @@ export default {
   },
   watch: {
     user(value) {
-      if (!value && this.$route.name !== 'Landing') {
-        this.$router.push('/landing');
+      if (value === null && this.$route.name !== 'Landing') {
+        this.$router.push('/');
       } else {
-        this.getEvents();
-        this.getCalendars();
+        if (!this.eventsPresent && !this.calendarsPresent) {
+          this.getEvents();
+          this.getCalendars();
+        }
+
+        if (this.$route.name !== 'Home') {
+          this.$router.push('/home');
+        }
       }
     }
   },
@@ -110,7 +63,7 @@ export default {
     const loggedIn = await this.checkStatus();
 
     if (!loggedIn && this.$route.name !== 'Landing') {
-      this.$router.push('/landing');
+      this.$router.push('/');
     } else if (loggedIn) {
       this.getUser();
     }
@@ -119,7 +72,7 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
 
 #app {
   font-family: 'Roboto', sans-serif;

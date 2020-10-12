@@ -1,4 +1,7 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import {
+  NowRequest,
+  NowResponse,
+} from '@vercel/node';
 
 import { getAuthURL } from '../util/google';
 

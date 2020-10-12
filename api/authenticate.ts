@@ -1,8 +1,19 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import {
+  NowRequest,
+  NowResponse,
+} from '@vercel/node';
 import mongoose from 'mongoose';
 
-import { User, defaultUserObject, userExists }  from '../models/user';
-import { getCalendar, getUserID, getToken } from '../util/google';
+import {
+  User,
+  defaultUserObject,
+  userExists,
+}  from '../models/user';
+import {
+  getCalendar,
+  getUserID,
+  getToken,
+} from '../util/google';
 import { generateToken } from '../util/auth';
 
 const {

@@ -7,7 +7,7 @@
     <p
       :class="$style.title"
       :style="{ 'maxWidth': `${size}px` }">
-      {{ prior ? 'Until' : ''}} {{ title }}
+      {{ title }}
     </p>
   </div>
 </template>
@@ -41,11 +41,6 @@ export default {
       return '';
     },
   },
-  watch: {
-    timeTil(value) {
-      console.log(value);
-    }
-  }
 };
 </script>
 

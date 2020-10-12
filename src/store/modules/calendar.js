@@ -12,6 +12,7 @@ const moduleMutations = {
 
 const moduleGetters = {
   calendars: state => state.calendars,
+  calendarsPresent: state => state.calendars.length !== 0,
 }
 
 const moduleActions = {

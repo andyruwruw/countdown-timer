@@ -1,4 +1,7 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import {
+  NowRequest,
+  NowResponse,
+} from '@vercel/node';
 import mongoose from 'mongoose';
 
 import { parseCookie } from '../util/auth';
@@ -24,19 +27,24 @@ mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@countdown-timer.
 export default async function (req: NowRequest, res: NowResponse) {
   try {
     const cookie = await parseCookie(req);
+
     if (cookie) {
       const { userID } = cookie;
 
       if (await userExists(userID)) {
         await mongoose.connection.close();
+
         return res.status(200).send({ valid: true });
       }
     }
     await mongoose.connection.close();
+
     return res.status(200).send({ valid: false });
   } catch (error) {
     console.log(error);
+
     await mongoose.connection.close();
+
     return res.status(400).send('U broke it');
   }
 };
