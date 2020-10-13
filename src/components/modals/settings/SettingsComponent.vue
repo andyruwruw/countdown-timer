@@ -33,6 +33,7 @@
             color="primary"
             :class="$style.save"
             :loading="saving"
+            :disabled="!changesUnsaved"
             @click="save">
             Save
           </v-btn>
@@ -41,7 +42,7 @@
 
       <div :class="$style['right-panel']">
         <div v-if="tab === 0">
-          <account-settings />
+          <account-settings @change="changeMade" />
         </div>
 
         <div v-if="tab === 1">
@@ -70,6 +71,7 @@ export default {
       'Appearance',
     ],
     changes: {},
+    changesUnsaved: false,
     saving: false,
   }),
   computed: {
@@ -81,9 +83,13 @@ export default {
     ...mapActions('user', [
       'changePreferences',
     ]),
+    ...mapActions('event', [
+      'getEvents',
+    ]),
     changeMade(change) {
       for (let key in change) {
         if (this.user[key] !== change[key]) {
+          this.changesUnsaved = true;
           this.changes[key] = change[key];
         } else {
           delete this.changes[key];
@@ -93,6 +99,10 @@ export default {
     async save() {
       this.saving = true;
       await this.changePreferences(this.changes);
+      if ('calendars' in this.changes) {
+        this.getEvents();
+      }
+      this.changesUnsaved = false;
       this.saving = false;
       this.$emit('close');
     },
@@ -134,7 +144,7 @@ export default {
   width: 800px;
   flex-grow: 2;
   height: 90vh;
-  max-height: 400px;
+  max-height: 600px;
   overflow-y: scroll;
   overflow-x: hidden;
 }

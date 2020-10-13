@@ -23,9 +23,10 @@
 
       <div>
         <v-checkbox
-          v-for="(item, index) in (calendars || [])"
+          v-for="(item, index) in (on || [])"
           :key="`settings-calendar-${index}`"
-          v-model="on[index]"
+          v-model="on[index].show"
+          @mouseup="toggleCalendar(index)"
           :label="`${item.summary}`"
           dense
           hide-details>
@@ -55,19 +56,31 @@ export default {
         return this.user.username;
       }
       return '';
-    }
+    },
+  },
+  methods: {
+    toggleCalendar() {
+      let calendarsOn = [];
+      for (let i = 0; i < this.on.length; i += 1) {
+        if (this.on[i].show) {
+          calendarsOn.push(this.on[i].id);
+        }
+      }
+      this.$emit('change', { calendars: calendarsOn });
+    },
   },
   created() {
     for (let i = 0; i < this.calendars.length; i++) {
-      if (this.user.calendars.includes(this.calendars[i].id)) {
-        this.on.push(true);
-      } else if (this.calendars[i].primary && this.user.calendars.includes('primary')) {
-        this.on.push(true);
-      }else {
-        this.on.push(false);
-      }
+      const enabled = this.user.calendars.includes(this.calendars[i].id);
+      const primary = this.calendars[i].primary;
+
+      this.on.push({
+        id: this.calendars[i].id,
+        show: enabled || primary,
+        summary: this.calendars[i].summary,
+      });
     }
-  }
+  },
 }
 </script>
 

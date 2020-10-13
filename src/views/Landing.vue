@@ -8,7 +8,7 @@
       </h1>
 
       <p>
-        when the seconds matter
+        when seconds count
       </p>
 
       <v-btn
@@ -16,7 +16,7 @@
         dark
         outlined
         large
-        color="blue"
+        color="black"
         @click="login">
         Sign in with Google
       </v-btn>
@@ -61,7 +61,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 5rem;
+  padding-bottom: 10rem;
 }
 
 .content img {
@@ -72,7 +72,7 @@ export default {
 .content p {
   font-size: 1.1rem;
   color: rgb(61, 61, 61);
-  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .content h1 {

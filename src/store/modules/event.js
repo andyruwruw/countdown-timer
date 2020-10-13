@@ -5,7 +5,7 @@ import {
   isFuture,
 } from 'date-fns';
 
-const moduleState = {
+const defaultState = () => ({
   /**
    * Set Interval Object
    */
@@ -35,7 +35,22 @@ const moduleState = {
    * Time til next stop
    */
   timeTil: null,
-};
+
+  /**
+   * 
+   */
+  remainingIntervals: {
+    years: 0,
+    months: 0,
+    weeks: 0,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  }
+});
+
+const moduleState = defaultState();
 
 const moduleMutations = {
   setSavedInterval(state, interval) {
@@ -45,8 +60,7 @@ const moduleMutations = {
     state.events = events;
   },
   shiftEvents(state) {
-    const expired = state.events.shift();
-    state.lastStop = expired.end.time;
+    state.events.shift();
   },
   setPrior(state, prior) {
     state.prior = prior;
@@ -60,6 +74,15 @@ const moduleMutations = {
   setTimeTil(state, data) {
     state.timeTil = data;
   },
+  setRemainingIntervals(state, data) {
+    state.remainingIntervals = data;
+  },
+  reset(state) {
+    const newState = defaultState();
+    for (let key of newState) {
+      state[key] = newState[key];
+    }
+  },
 };
 
 const moduleGetters = {
@@ -69,6 +92,7 @@ const moduleGetters = {
   lastStop: state => state.lastStop,
   prior: state => state.prior,
   timeTil: state => state.timeTil,
+  remainingIntervals: state => state.remainingIntervals,
   eventsPresent: state => state.events.length !== 0,
 };
 
@@ -81,19 +105,43 @@ const moduleActions = {
   async getEvents({ commit, state, dispatch }) {
     let { data } = await axios.get('/api/events');
 
+    let stops = [];
+    const now = (new Date()).getTime();
+
     for (let i = 0; i < data.length; i++) {
-      data[i].start.time = (new Date(data[i].start.dateTime)).getTime();
-      data[i].end.time = (new Date(data[i].end.dateTime)).getTime();
+      const start = new Date(data[i].start.dateTime);
+
+      if (start.getTime() > now) {
+        stops.push({
+          id: data[i].id,
+          name: data[i].summary,
+          href: data[i].htmlLink,
+          time: start,
+          start: true,
+        });
+      }
+      
+      const end = new Date(data[i].end.dateTime);
+
+      if (start.getTime() > now) {
+        stops.push({
+          id: data[i].id,
+          name: data[i].summary,
+          href: data[i].htmlLink,
+          time: end,
+          start: false,
+        });
+      }
     }
 
-    data.sort((a, b) => {
-      return a.end.time - b.end.time;
+    stops.sort((a, b) => {
+      return a.time.getTime() - b.time.getTime();
     });
 
-    commit('setEvents', state.events.concat(data));
+    await commit('setEvents', stops);
 
     if (state.nextStop === null) {
-      dispatch('setStops');
+      await dispatch('setStops');
     }
     
     if (state.interval === null) {
@@ -104,16 +152,17 @@ const moduleActions = {
   /**
    *  Sets next stops.
    */
-  setStops({ state, commit}) {
-    if (isFuture(state.events[0].start.time)) {
+  setStops({ dispatch, state, commit}) {
+    if (isFuture(state.events[0].time)) {
       commit('setPrior', true);
-      commit('setLastStop', (new Date()).getTime());
-      commit('setNextStop', state.events[0].start.time);
-    } else if (isPast(state.events[0].start.time)) {
+      commit('setLastStop', new Date());
+      commit('setNextStop', state.events[0].time);
+    } else if (isPast(state.events[0].time)) {
       commit('setPrior', false);
-      commit('setLastStop', state.events[0].start.time);
-      commit('setNextStop', state.events[0].end.time);
+      commit('setLastStop', state.events[0].time);
+      commit('setNextStop', state.events[1].time);
     }
+    dispatch('updateTimeTil');
   },
 
   /**
@@ -142,11 +191,11 @@ const moduleActions = {
     if (state.prior) {
       commit('setPrior', false);
       await commit('setLastStop', state.nextStop);
-      commit('setNextStop', state.events[0].end.time);
+      commit('setNextStop', state.events[1].time);
     } else {
       commit('setPrior', true);
       await commit('setLastStop', state.nextStop);
-      commit('setNextStop', state.events[1].start.time);
+      commit('setNextStop', state.events[1].time);
     }
 
     commit('shiftEvents');
@@ -157,11 +206,49 @@ const moduleActions = {
    * 
    * @param {Function} context Vuex Context
    */
-  async updateTimeTil({ state, commit }) {
-    commit(
-      'setTimeTil',
-      moment(new Date(state.nextStop)).toNow(true),
-    );
+  async updateTimeTil({ rootState, state, commit }) {
+    let remaining = state.nextStop.getTime() - (new Date()).getTime();
+
+    if (rootState.user.user.textType === 'verbouse') {
+      const year = Math.floor(remaining / 31556952000);
+      remaining %= 31556952000;
+      const month = Math.floor(remaining / 2629746000);
+      remaining %= 2629746000;
+      const week = Math.floor(remaining / 604800000);
+      remaining %= 604800000;
+      const day = Math.floor(remaining / 86400000);
+      remaining %= 86400000;
+      const hour = Math.floor(remaining / 3600000);
+      remaining %= 3600000;
+      const minute = Math.floor(remaining / 60000);
+      remaining %= 60000;
+      const second = Math.floor(remaining / 1000);
+
+      commit(
+        'setRemainingIntervals',
+        {
+          year,
+          month,
+          week,
+          day,
+          hour,
+          minute,
+          second,
+        },
+      );
+    } else {
+      if (remaining <= 60000) {
+        commit(
+          'setTimeTil',
+          `${Math.ceil(remaining / 1000)} seconds`,
+        );
+      } else {
+        commit(
+          'setTimeTil',
+          moment(state.nextStop).toNow(true),
+        );
+      }
+    }
   },
   /**
    * Start Loop

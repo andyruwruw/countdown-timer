@@ -34,13 +34,11 @@ export default async function (req: NowRequest, res: NowResponse) {
     let events = [];
 
     let now = new Date();
-    var tomorrow = (new Date(now.getTime() + (24 * 60 * 60 * 1000)));
 
     for (let i = 0; i < calendars.length; i++) {
       let response = await calendar.events.list({
         calendarId: calendars[i],
         timeMin: now.toISOString(),
-        timeMax: tomorrow.toISOString(),
         maxResults: 30,
         singleEvents: true,
         orderBy: 'startTime',

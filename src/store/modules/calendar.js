@@ -1,12 +1,20 @@
 import axios from 'axios';
 
-const moduleState = {
+const defaultState = () => ({
   calendars: [],
-};
+});
+
+const moduleState = defaultState();
 
 const moduleMutations = {
   setCalendars(state, calendars) {
     state.calendars = calendars;
+  },
+  reset(state) {
+    const newState = defaultState();
+    for (let key of newState) {
+      state[key] = newState[key];
+    }
   },
 };
 

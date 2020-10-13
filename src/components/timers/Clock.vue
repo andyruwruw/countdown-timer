@@ -7,7 +7,7 @@
 
 <script>
 import VueP5 from 'vue-p5';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Clock',
@@ -24,9 +24,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('event', [
-      'eventExpired',
-    ]),
     setup(sketch) {
       sketch.resizeCanvas(this.size, this.size);
       this.currSize = this.size;
@@ -35,16 +32,16 @@ export default {
     },
     draw(sketch) {
       let now = (new Date()).getTime();
-      if (this.nextStop < now) {
-        this.eventExpired();
-      }
+
       if (this.currSize !== this.size) {
         sketch.resizeCanvas(this.size, this.size);
         this.currSize = this.size;
       }
+
       sketch.clear();
       sketch.background(this.backgroundColor);
-      let completion = now / (this.nextStop - this.lastStop) * 360;
+
+      let completion = (now - this.lastStop.getTime()) / (this.nextStop.getTime() - this.lastStop.getTime());
 
       sketch.fill('rgba(0,0,0,.1)');
       sketch.arc(
@@ -57,8 +54,8 @@ export default {
       );
 
       let sections = [
-        {value: completion, color: this.primaryColor},
-        {value: 360 - completion, color: this.secondaryColor}
+        {value: completion * 360, color: this.primaryColor},
+        {value: 360 - completion * 360, color: this.secondaryColor}
       ];
 
       let lastAngle = sketch.radians(-90);

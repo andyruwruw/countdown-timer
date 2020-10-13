@@ -9,6 +9,7 @@
     "server": "vercel dev"
   },
   "dependencies": {
+    "@mdi/js": "^5.6.55",
     "@vercel/node": "^1.7.3",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
