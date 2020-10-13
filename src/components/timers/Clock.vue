@@ -41,7 +41,7 @@ export default {
       sketch.clear();
       sketch.background(this.backgroundColor);
 
-      let completion = (now - this.lastStop.getTime()) / (this.nextStop.getTime() - this.lastStop.getTime());
+      let completion = (now - this.lastStop.getTime()) / ((new Date(this.events[0].time)).getTime() - this.lastStop.getTime());
 
       sketch.fill('rgba(0,0,0,.1)');
       sketch.arc(
@@ -83,6 +83,7 @@ export default {
     ...mapGetters('event', [
       'nextStop',
       'lastStop',
+      'events',
     ]),
   },
 };

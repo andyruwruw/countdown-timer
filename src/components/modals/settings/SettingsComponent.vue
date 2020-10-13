@@ -42,7 +42,9 @@
 
       <div :class="$style['right-panel']">
         <div v-if="tab === 0">
-          <account-settings @change="changeMade" />
+          <account-settings
+            @close="close"
+            @change="changeMade" />
         </div>
 
         <div v-if="tab === 1">

@@ -1,28 +1,32 @@
 <template>
   <div :class="$style.component">
     <div :class="$style['interval-container']">
-        <div
-            v-for="interval in filteredIntervals"
-            :key="`interval-${interval.key}`"
-            :class="$style.interval">
-            <h1>
-                {{ interval.value }}
-            </h1>
+      <div
+        v-for="interval in filteredIntervals"
+        :key="`interval-${interval.key}`"
+        :class="$style.interval">
+        <h1 :class="{ [$style.dark]: dark }">
+          {{ interval.value }}
+        </h1>
 
-            <p>
-                {{ interval.key }}
-            </p>
-        </div>
+        <p :class="{ [$style.dark]: dark }">
+          {{ interval.key }}
+        </p>
+      </div>
     </div>
 
     <v-tooltip
       bottom
-      color="rgba(0,0,0,.2)">
+      :color="dark ? 'rgba(200, 200, 200, .2)': 'rgba(0,0,0,.2)'">
       <template v-slot:activator="{ on, attrs }">
         <p
           v-bind="attrs"
           v-on="on"
-          :class="$style.title"
+          :class="[$style.title,
+            {
+              [$style.dark]: dark,    
+            },
+          ]"
           :style="{ 'maxWidth': `${size}px` }"
           @click="goToEvent">
           {{ title }}
@@ -58,6 +62,9 @@ export default {
       'events',
       'prior',
       'remainingIntervals',
+    ]),
+    ...mapGetters('user', [
+      'dark',
     ]),
     eventTime() {
       if (this.eventsPresent) {
@@ -104,41 +111,53 @@ export default {
 
 <style module>
 .component p {
-    margin: 0 auto;
-    text-align: center;
-    word-wrap: normal;
+  margin: 0 auto;
+  text-align: center;
+  word-wrap: normal;
 }
 
 .interval-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .interval {
-    padding: 0 1.4rem;
+  padding: 0 1.6rem;
 }
 
 .interval h1 {
-    font-size: 9rem;
-    font-weight: 300;
-    line-height: 9rem;
-    text-align: center;
+  font-size: 11rem;
+  font-weight: 300;
+  line-height: 9rem;
+  text-align: center;
+}
+
+.interval h1.dark {
+  color: white;
 }
 
 .interval p {
-    font-size: 1.5rem;
-    color: rgb(65, 64, 64);
-    text-align: center;
+  font-size: 1.5rem;
+  color: rgba(0, 0, 0, 0.658);
+  text-align: center;
+}
+
+.interval p.dark {
+  color: rgba(255, 255, 255, 0.658);
 }
 
 .time-til {
-    font-size: 5rem;
+  font-size: 5rem;
 }
 
 .title {
-    padding-top: 1rem;
-    font-size: 3rem;
+  padding-top: 1rem;
+  font-size: 3rem;
+}
+
+.title.dark {
+  color: white;
 }
 
 .event-time {

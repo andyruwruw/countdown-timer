@@ -11,9 +11,18 @@
         Account
       </p>
 
-      <p>
-        {{ username }}
-      </p>
+      <div>
+        <p>
+          {{ username }}
+        </p>
+
+        <v-btn
+          color="warning"
+          outlined
+          @click="signOut">
+          Sign Out
+        </v-btn>
+      </div>
     </div>
 
     <div :class="$style.section">
@@ -23,10 +32,10 @@
 
       <div>
         <v-checkbox
-          v-for="(item, index) in (on || [])"
-          :key="`settings-calendar-${index}`"
-          v-model="on[index].show"
-          @mouseup="toggleCalendar(index)"
+          v-for="item in (calendarMap || [])"
+          :key="`settings-calendar-${item.id}`"
+          :input-value="calendarMap[item.id].show"
+          @mouseup="toggleCalendar(item.id)"
           :label="`${item.summary}`"
           dense
           hide-details>
@@ -37,12 +46,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'AccountSettings',
   data: () => ({
-    on: [],
+    calendarMap: {},
   }),
   computed: {
     ...mapGetters('user', [
@@ -59,27 +68,42 @@ export default {
     },
   },
   methods: {
-    toggleCalendar() {
-      let calendarsOn = [];
-      for (let i = 0; i < this.on.length; i += 1) {
-        if (this.on[i].show) {
-          calendarsOn.push(this.on[i].id);
+    ...mapActions('user', [
+      'logout',
+    ]),
+    toggleCalendar(id) {
+      this.calendarMap[id].show = !this.calendarMap[id].show;
+
+      const active = [];
+
+      for (let calendar in this.calendarMap) {
+        if (this.calendarMap[calendar].show) {
+          active.push(this.calendarMap[calendar].id);
         }
       }
-      this.$emit('change', { calendars: calendarsOn });
+
+      console.log(active);
+
+      this.$emit('change', { calendars: active });
+    },
+    signOut() {
+      this.logout();
+      this.$emit('close');
     },
   },
   created() {
     for (let i = 0; i < this.calendars.length; i++) {
       const enabled = this.user.calendars.includes(this.calendars[i].id);
-      const primary = this.calendars[i].primary;
+      const primaryEnabled = this.user.calendars.includes('primary');
+      const primary = this.calendars[i].primary || false;
 
-      this.on.push({
+      this.calendarMap[this.calendars[i].id] = {
         id: this.calendars[i].id,
-        show: enabled || primary,
+        show: enabled || (primary && primaryEnabled),
         summary: this.calendars[i].summary,
-      });
+      };
     }
+    console.log(this.calendarMap);
   },
 }
 </script>

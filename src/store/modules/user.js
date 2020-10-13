@@ -38,7 +38,7 @@ const moduleGetters = {
     return 0;
   },
   dark: (state) => {
-    if (state.user) {
+    if (state.user !== null) {
       return colorThemes[state.user.colors].dark;
     }
     return false;
@@ -47,33 +47,36 @@ const moduleGetters = {
 }
 
 const moduleActions = {
-  defineUser(context, payload) {
-    context.commit('setUser', payload);
+  defineUser({ commit }, payload) {
+    commit('setUser', payload);
   },
-  async getUser(context) {
+  async getUser({ commit }) {
     const { data } = await axios.get('/api/user');
-    context.commit('setUser', data);
+    commit('setUser', data);
   },
-  async authenticate(context, code) {
+  async authenticate({ commit }, code) {
     let { data } = await axios.post('/api/authenticate', { code: code });
-    context.commit('setUser', data);
+    commit('setUser', data);
   },
   async login() {
     let { data } = await axios.post('/api/auth-url');
     window.location.href = data;
   },
-  async logout(context) {
+  async logout({ commit, dispatch }) {
     await axios.post('/api/logout');
-    context.commit('setUser', null);
+    commit('setUser', null);
+    dispatch('event/endLoop', null, { root: true });
+    dispatch('event/resetState', null, { root: true });
+    dispatch('calendar/resetState', null, { root: true });
   },
   async checkStatus() {
     let { data } = await axios.post('/api/auth-check');
     return data.valid;
   },
-  async changePreferences(context, payload) {
+  async changePreferences({ commit }, payload) {
     let { data } = await axios.post('/api/preferences', payload);
-    await context.commit('setUser', data);
-  }
+    await commit('setUser', data);
+  },
 };
 
 export default {

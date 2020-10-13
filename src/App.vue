@@ -12,9 +12,15 @@
       <div
         class="logo"
         @click="goHome">
-        <img src="./assets/logo.svg"/>
+        <img
+          v-if="!dark"
+          src="./assets/logo.svg" />
 
-        <p>
+        <img
+          v-else
+          src="./assets/logo-dark.svg" />
+
+        <p :class="{ 'dark': dark }">
           countdown timer
         </p>
       </div>
@@ -25,7 +31,7 @@
         <v-btn
           icon
           href="https://github.com/andyruwruw/countdown-timer">
-          <v-icon color="black">{{ github }}</v-icon>
+          <v-icon :color="dark ? 'white' : 'black'">{{ github }}</v-icon>
         </v-btn>
 
         <v-dialog
@@ -38,11 +44,11 @@
               icon
               v-bind="attrs"
               v-on="on">
-              <v-icon color="black">mdi-cog</v-icon>
+              <v-icon :color="dark ? 'white' : 'black'">mdi-cog</v-icon>
             </v-btn>
           </template>
 
-          <settings-component />
+          <settings-component @close="closeSettings"/>
         </v-dialog>
       </div>
     </v-app-bar>
@@ -154,6 +160,10 @@ export default {
 .logo p {
   margin: 0 0 0 .3rem !important;
   color: rgba(0, 0, 0, 0.932);
+}
+
+.logo p.dark {
+  color: rgba(255, 255, 255, 0.918);
 }
 
 .logo {
