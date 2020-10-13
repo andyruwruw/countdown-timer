@@ -8,9 +8,6 @@ Generates countdown timers based on the closest or current event on your google 
 
 <a href="https://countdown-timer-app.vercel.app/">Available Here</a>
 
-
-# Usage Details
-
 Countdown timer will display how much time remains until an active event ends, or in lack of a current event, how long until your next event.
 
 <img src="https://raw.githubusercontent.com/andyruwruw/countdown-timer/master/docs/example.PNG">
