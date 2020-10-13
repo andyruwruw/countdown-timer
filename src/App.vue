@@ -141,7 +141,7 @@ export default {
 }
 
 .v-app-bar {
-  opacity: 0;
+  opacity: .1;
   transition: all .3s ease !important;
 }
 
