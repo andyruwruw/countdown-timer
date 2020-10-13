@@ -1,21 +1,15 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/andyruwruw/countdown-timer/master/src/assets/logo.svg">
+    <img src="https://raw.githubusercontent.com/andyruwruw/countdown-timer/master/docs/countdown-timer.PNG">
 </p>
 
-<p align="center">
-    <h2 align="center">countdown timer</h2>
-</p>
-
-<p align="center">
-    <a href="https://countdown-timer-app.vercel.app/">Available Here</a>
-</p>
-
-## Overview
+# Overview
 
 Generates countdown timers based on the closest or current event on your google calendar.
 
+<a href="https://countdown-timer-app.vercel.app/">Available Here</a>
 
-## Usage Details
+
+# Usage Details
 
 Countdown timer will display how much time remains until an active event ends, or in lack of a current event, how long until your next event.
 
@@ -25,7 +19,7 @@ Using Google Calendar's API, the application will query your default calendar. M
 
 In the case of overlapping events, countdown timer will look for the next begining or end of an event.
 
-## Permisions
+# Permisions
 
 Granting the website access to your google account allows it to view calendars. The only data saved is your username, colors, clock type, text type, and ids of calenders you wish to enable on the app.
 
