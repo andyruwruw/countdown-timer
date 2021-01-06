@@ -11,7 +11,7 @@
   "dependencies": {
     "@mdi/js": "^5.6.55",
     "@vercel/node": "^1.7.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.15.0",
     "googleapis": "^56.0.0",
