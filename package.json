@@ -17,7 +17,7 @@
     "googleapis": "^56.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
-    "mongoose": "^5.9.26",
+    "mongoose": "^5.13.15",
     "typescript": "^3.9.7",
     "vue": "^2.6.11",
     "vue-p5": "^0.8.3",
